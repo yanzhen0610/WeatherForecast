@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="today">今日</string>
+    <string name="tomorrow">明日</string>
+    <string name="action_settings">設定</string>
+    <string name="action_about">關於我們</string>
+    <string name="action_map">在地圖中打開</string>
+    <string name="action_share">分享</string>
+    <string name="app_name">全台天氣報報</string>
+    <string name="title_activity_detail">詳情</string>
+    <string name="title_activity_settings">設定</string>
+    <string name="pref_location_label">位置</string>
+    <string name="pressure_label">氣壓</string>
+    <string name="humidity_label">濕度</string>
+    <string name="condition_2xx">暴風雨</string>
+    <string name="condition_3xx">毛毛雨</string>
+    <string name="condition_500">小雨</string>
+    <string name="condition_501">中雨</string>
+    <string name="condition_502">大雨</string>
+    <string name="condition_504">大豪雨</string>
+    <string name="condition_503">豪雨</string>
+    <string name="pref_units_label">單位</string>
+    <string name="pref_units_label_metric">公制</string>
+    <string name="pref_units_label_imperial">英制</string>
+    <string name="pref_enable_notifications_label">天氣通知</string>
+    <string name="pref_enable_notifications_true">已啟用</string>
+    <string name="pref_enable_notifications_false">已關閉</string>
+    <string name="wind_label">風</string>
+    <string name="condition_521">陣雨</string>
+    <string name="condition_804">多雲</string>
+    <string name="condition_802">疏雲</string>
+    <string name="condition_803">裂雲</string>
+    <string name="condition_801">晴時多雲</string>
+    <string name="condition_800">晴朗</string>
+    <string name="a11y_forecast_icon">天氣預報: <xliff:g id="condition">%1$s</xliff:g></string>
+    <string name="a11y_high_temp">高溫: <xliff:g id="high">%1$s</xliff:g></string>
+    <string name="a11y_low_temp">低溫: <xliff:g id="low">%1$s</xliff:g></string>
+    <string name="a11y_forecast">天氣預報: <xliff:g id="condition">%1$s</xliff:g></string>
+    <string name="format_notification">"         天氣:<xliff:g id="condition">%1$s</xliff:g> -         高溫:<xliff:g id="high">%2$s</xliff:g>         低溫:<xliff:g id="low">%3$s</xliff:g>     "</string>
+    <string name="pref_use_current_location_label">使用目前位置</string>
+    <string name="action_refresh">重新整理</string>
+</resources>
