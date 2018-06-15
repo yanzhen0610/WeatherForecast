@@ -18,7 +18,7 @@ package tw.edu.tku.csie.weatherforecast.data;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-import tw.edu.tku.csie.weatherforecast.utilities.DateUtils;
+import tw.edu.tku.csie.weatherforecast.utilities.WeatherAppDateUtils;
 
 /**
  * Defines table and column names for the weather database. This class is not necessary, but keeps
@@ -131,7 +131,7 @@ public class WeatherAppContract {
          * @return The selection part of the weather query for today onwards
          */
         public static String getSqlSelectForTodayOnwards() {
-            long normalizedUtcNow = DateUtils.normalizeDate(System.currentTimeMillis());
+            long normalizedUtcNow = WeatherAppDateUtils.normalizeDate(System.currentTimeMillis());
             return WeatherAppContract.WeatherEntry.COLUMN_DATE + " >= " + normalizedUtcNow;
         }
     }
