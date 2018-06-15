@@ -40,7 +40,7 @@ public class FakeDataUtils {
      */
     public static void insertFakeData(Context context) {
         //Get today's normalized date
-        long today = DateUtils.normalizeDate(System.currentTimeMillis());
+        long today = WeatherAppDateUtils.getNormalizedUtcDateForToday();
         List<ContentValues> fakeValues = new ArrayList<ContentValues>();
         //loop over 7 days starting today onwards
         for(int i=0; i<7; i++) {
