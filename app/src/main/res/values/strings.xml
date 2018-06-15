@@ -70,8 +70,11 @@
       - Used by WeatherAppPreferences  -
       - - - - - - - - - - - - - - - -->
 
+    <!-- Label for Use Current Location Preference -->
     <string name="pref_use_current_location_label" translatable="true">Use Current Location</string>
+    <!-- Key for Use Current Location Preference -->
     <string name="pref_use_current_location_key" translatable="false">use_current_location</string>
+    <!-- Key for storing name of the user's current city -->
     <string name="pref_current_city_key" translatable="false">current_city</string>
 
     <!-- Label for the location preference -->
@@ -80,7 +83,9 @@
 
     <!-- Key name for storing location in SharedPreferences -->
     <string name="pref_user_input_location_key" translatable="false">location_user</string>
+    <!-- Key name for storing location name with user locale -->
     <string name="pref_locale_location_key" translatable="false">location</string>
+    <!-- Key name for storing location name in English -->
     <string name="pref_en_location_key" translatable="false">location_en</string>
 
     <!-- Default postal code for location preference -->
@@ -248,5 +253,9 @@
 
     <!-- The format of the notification we show when the weather is updated -->
     <string name="format_notification">"         Forecast:<xliff:g id="condition">%1$s</xliff:g> -         High:<xliff:g id="high">%2$s</xliff:g>         Low:<xliff:g id="low">%3$s</xliff:g>     "</string>
+
+    <!-- Notification channel name and description -->
+    <string name="notification_weather_forecast_channel_name">Weather Forecast</string>
+    <string name="notification_weather_forecast_channel_description">Send weather forecast daily</string>
 
 </resources>
