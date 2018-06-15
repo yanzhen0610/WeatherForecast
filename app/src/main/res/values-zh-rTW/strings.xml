@@ -39,4 +39,6 @@
     <string name="format_notification">"         天氣:<xliff:g id="condition">%1$s</xliff:g> -         高溫:<xliff:g id="high">%2$s</xliff:g>         低溫:<xliff:g id="low">%3$s</xliff:g>     "</string>
     <string name="pref_use_current_location_label">使用目前位置</string>
     <string name="action_refresh">重新整理</string>
+    <string name="notification_weather_forecast_channel_name">天氣預報</string>
+    <string name="notification_weather_forecast_channel_description">傳送當日天氣</string>
 </resources>
