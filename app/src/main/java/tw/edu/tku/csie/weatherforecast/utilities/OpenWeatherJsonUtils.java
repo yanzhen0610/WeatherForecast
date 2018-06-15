@@ -16,7 +16,7 @@
 package tw.edu.tku.csie.weatherforecast.utilities;
 
 import android.content.ContentValues;
-import android.content.Context;
+//import android.content.Context;
 
 import tw.edu.tku.csie.weatherforecast.data.WeatherAppContract;
 
@@ -32,12 +32,12 @@ import java.net.HttpURLConnection;
 public final class OpenWeatherJsonUtils {
 
     /* Location information */
-    private static final String OWM_CITY = "city";
-    private static final String OWM_COORD = "coord";
+//    private static final String OWM_CITY = "city";
+//    private static final String OWM_COORD = "coord";
 
     /* Location coordinate */
-    private static final String OWM_LATITUDE = "lat";
-    private static final String OWM_LONGITUDE = "lon";
+//    private static final String OWM_LATITUDE = "lat";
+//    private static final String OWM_LONGITUDE = "lon";
 
     /* Weather information. Each day's forecast info is an element of the "list" array */
     private static final String OWM_LIST = "list";
@@ -52,7 +52,7 @@ public final class OpenWeatherJsonUtils {
     private static final String OWN_MAIN_INFO = "main";
 
     /* All temperatures are children of the "temp" object */
-    private static final String OWM_TEMPERATURE = "temp";
+//    private static final String OWM_TEMPERATURE = "temp";
 
     /* Max temperature for the day */
 //    private static final String OWM_MAX = "max";
@@ -79,16 +79,16 @@ public final class OpenWeatherJsonUtils {
      *
      * @throws JSONException If JSON data cannot be properly parsed
      */
-    public static ContentValues[] getWeatherContentValuesFromJson(Context context, String forecastJsonStr)
+    public static ContentValues[] getWeatherContentValuesFromJson(String forecastJsonStr)
             throws JSONException {
 
         JSONObject forecastJson = new JSONObject(forecastJsonStr);
 
         /* Is there an error? */
         if (forecastJson.has(OWM_MESSAGE_CODE)) {
-            int errorCode = forecastJson.getInt(OWM_MESSAGE_CODE);
+            int statusCode = forecastJson.getInt(OWM_MESSAGE_CODE);
 
-            switch (errorCode) {
+            switch (statusCode) {
                 case HttpURLConnection.HTTP_OK:
                     break;
                 case HttpURLConnection.HTTP_NOT_FOUND:
@@ -119,9 +119,9 @@ public final class OpenWeatherJsonUtils {
          * going to take advantage of that to get a nice normalized UTC date for all of our weather.
          */
 //        long now = System.currentTimeMillis();
-//        long normalizedUtcStartDay = DateUtils.normalizeDate(now);
+//        long normalizedUtcStartDay = WeatherAppDateUtils.normalizeDate(now);
 
-        long normalizedUtcStartDay = DateUtils.getNormalizedUtcDateForToday();
+        long normalizedUtcStartDay = WeatherAppDateUtils.getNormalizedUtcDateForToday();
 
         for (int i = 0; i < jsonWeatherArray.length(); i++) {
 
@@ -143,7 +143,7 @@ public final class OpenWeatherJsonUtils {
              * We ignore all the datetime values embedded in the JSON and assume that
              * the values are returned in-order by day (which is not guaranteed to be correct).
              */
-            dateTimeMillis = normalizedUtcStartDay + DateUtils.DAY_IN_MILLIS * i;
+            dateTimeMillis = normalizedUtcStartDay + WeatherAppDateUtils.DAY_IN_MILLIS * i;
 
             JSONObject mainInfo = dayForecast.getJSONObject(OWN_MAIN_INFO);
             JSONObject windInfo = dayForecast.getJSONObject(OWN_WIND_INFO);
