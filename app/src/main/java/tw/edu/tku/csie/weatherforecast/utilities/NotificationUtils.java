@@ -1,5 +1,6 @@
 package tw.edu.tku.csie.weatherforecast.utilities;
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -9,6 +10,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
@@ -46,6 +48,26 @@ public class NotificationUtils {
      */
     private static final int WEATHER_NOTIFICATION_ID = 3005;
 
+    private static final String CHANNEL_ID = "channel_id_0";
+
+    private static void createNotificationChannel(Context context) {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "test";
+            String description = "test description";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
+            }
+        }
+    }
+
     /**
      * Constructs and displays a notification for the newly updated weather for today.
      *
@@ -53,9 +75,11 @@ public class NotificationUtils {
      */
     public static void notifyUserOfNewWeather(Context context) {
 
+        createNotificationChannel(context);
+
         /* Build the URI for today's weather in order to show up to date data in notification */
         Uri todaysWeatherUri = WeatherAppContract.WeatherEntry
-                .buildWeatherUriWithDate(DateUtils.normalizeDate(System.currentTimeMillis()));
+                .buildWeatherUriWithDate(WeatherAppDateUtils.getNormalizedUtcDateForToday());
 
         /*
          * The MAIN_FORECAST_PROJECTION array passed in as the second parameter is defined in our WeatherAppContract
@@ -72,7 +96,7 @@ public class NotificationUtils {
          * If todayWeatherCursor is empty, moveToFirst will return false. If our cursor is not
          * empty, we want to show the notification.
          */
-        if (todayWeatherCursor.moveToFirst()) {
+        if (todayWeatherCursor != null && todayWeatherCursor.moveToFirst()) {
 
             /* Weather ID as returned by API, used to identify the icon to be used */
             int weatherId = todayWeatherCursor.getInt(INDEX_WEATHER_ID);
@@ -102,13 +126,14 @@ public class NotificationUtils {
              * finally the text of the notification, which in our case in a summary of today's
              * forecast.
              */
-            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context)
-                    .setColor(ContextCompat.getColor(context,R.color.colorPrimary))
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                    .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
                     .setSmallIcon(smallArtResourceId)
                     .setLargeIcon(largeIcon)
                     .setContentTitle(notificationTitle)
                     .setContentText(notificationText)
-                    .setAutoCancel(true);
+                    .setAutoCancel(true)
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
             /*
              * This Intent will be triggered when the user clicks the notification. In our case,
@@ -128,17 +153,21 @@ public class NotificationUtils {
                     context.getSystemService(Context.NOTIFICATION_SERVICE);
 
             /* WEATHER_NOTIFICATION_ID allows you to update or cancel the notification later on */
-            notificationManager.notify(WEATHER_NOTIFICATION_ID, notificationBuilder.build());
+//            notificationManager.notify(WEATHER_NOTIFICATION_ID, notificationBuilder.build());
+            if (notificationManager != null) {
+                notificationManager.notify(WEATHER_NOTIFICATION_ID, notificationBuilder.build());
+            }
 
             /*
              * Since we just showed a notification, save the current time. That way, we can check
              * next time the weather is refreshed if we should show another notification.
              */
             WeatherAppPreferences.saveLastNotificationTime(context, System.currentTimeMillis());
+
+            /* Always close your cursor when you're done with it to avoid wasting resources. */
+            todayWeatherCursor.close();
         }
 
-        /* Always close your cursor when you're done with it to avoid wasting resources. */
-        todayWeatherCursor.close();
     }
 
     /**
@@ -168,11 +197,15 @@ public class NotificationUtils {
         String notificationFormat = context.getString(R.string.format_notification);
 
         /* Using String's format method, we create the forecast summary */
-        String notificationText = String.format(notificationFormat,
+//        String notificationText = String.format(notificationFormat,
+//                shortDescription,
+//                WeatherUtils.formatTemperature(context, high),
+//                WeatherUtils.formatTemperature(context, low));
+//
+//        return notificationText;
+        return String.format(notificationFormat,
                 shortDescription,
                 WeatherUtils.formatTemperature(context, high),
                 WeatherUtils.formatTemperature(context, low));
-
-        return notificationText;
     }
 }
