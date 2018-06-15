@@ -16,18 +16,18 @@
 package tw.edu.tku.csie.weatherforecast.utilities;
 
 import android.content.Context;
-import android.text.format.DateUtils;
 
 import tw.edu.tku.csie.weatherforecast.R;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 /**
  * Class for handling date conversions that are useful for Sunshine.
  */
-public final class DateUtils {
+public final class WeatherAppDateUtils {
 
     /* Milliseconds in a day */
     public static final long DAY_IN_MILLIS = TimeUnit.DAYS.toMillis(1);
@@ -74,7 +74,11 @@ public final class DateUtils {
          * elapsed time since the epoch for our current time zone. We pass the current UTC time
          * into this method so it can determine changes to account for daylight savings time.
          */
-        long gmtOffsetMillis = currentTimeZone.getOffset(utcNowMillis);
+//        long gmtOffsetMillis = currentTimeZone.getOffset(utcNowMillis);
+        long dstOffsetInMillis = 0;
+        if (currentTimeZone.inDaylightTime(new Date(utcNowMillis))) {
+            dstOffsetInMillis = currentTimeZone.getDSTSavings();
+        }
 
         /*
          * UTC time is measured in milliseconds from January 1, 1970 at midnight from the GMT
@@ -82,19 +86,20 @@ public final class DateUtils {
          * will be greater or smaller. This variable represents the number of milliseconds since
          * January 1, 1970 (GMT) time.
          */
-        long timeSinceEpochLocalTimeMillis = utcNowMillis + gmtOffsetMillis;
+        long timeSinceEpochLocalTimeMillis = utcNowMillis + dstOffsetInMillis;
 
-        /* This method simply converts milliseconds to days, disregarding any fractional days */
-        long daysSinceEpochLocal = TimeUnit.MILLISECONDS.toDays(timeSinceEpochLocalTimeMillis);
-
-        /*
-         * Finally, we convert back to milliseconds. This time stamp represents today's date at
-         * midnight in GMT time. We will need to account for local time zone offsets when
-         * extracting this information from the database.
-         */
-        long normalizedUtcMidnightMillis = TimeUnit.DAYS.toMillis(daysSinceEpochLocal);
-
-        return normalizedUtcMidnightMillis;
+        return timeSinceEpochLocalTimeMillis / DAY_IN_MILLIS * DAY_IN_MILLIS;
+//        /* This method simply converts milliseconds to days, disregarding any fractional days */
+//        long daysSinceEpochLocal = TimeUnit.MILLISECONDS.toDays(timeSinceEpochLocalTimeMillis);
+//
+//        /*
+//         * Finally, we convert back to milliseconds. This time stamp represents today's date at
+//         * midnight in GMT time. We will need to account for local time zone offsets when
+//         * extracting this information from the database.
+//         */
+//        long normalizedUtcMidnightMillis = TimeUnit.DAYS.toMillis(daysSinceEpochLocal);
+//
+//        return normalizedUtcMidnightMillis;
     }
 
     /**
@@ -136,9 +141,10 @@ public final class DateUtils {
      * @return The UTC date at 12 midnight of the date
      */
     public static long normalizeDate(long date) {
-        long daysSinceEpoch = elapsedDaysSinceEpoch(date);
-        long millisFromEpochToTodayAtMidnightUtc = daysSinceEpoch * DAY_IN_MILLIS;
-        return millisFromEpochToTodayAtMidnightUtc;
+//        long daysSinceEpoch = elapsedDaysSinceEpoch(date);
+//        long millisFromEpochToTodayAtMidnightUtc = daysSinceEpoch * DAY_IN_MILLIS;
+//        return millisFromEpochToTodayAtMidnightUtc;
+        return date / DAY_IN_MILLIS * DAY_IN_MILLIS;
     }
 
     /**
@@ -234,7 +240,7 @@ public final class DateUtils {
                 /*
                  * Since there is no localized format that returns "Today" or "Tomorrow" in the API
                  * levels we have to support, we take the name of the day (from SimpleDateFormat)
-                 * and use it to replace the date from DateUtils. This isn't guaranteed to work,
+                 * and use it to replace the date from WeatherAppDateUtils. This isn't guaranteed to work,
                  * but our testing so far has been conclusively positive.
                  *
                  * For information on a simpler API to use (on API > 18), please check out the
@@ -263,7 +269,7 @@ public final class DateUtils {
      * Returns a date string in the format specified, which shows an abbreviated date without a
      * year.
      *
-     * @param context      Used by DateUtils to format the date in the current locale
+     * @param context      Used by WeatherAppDateUtils to format the date in the current locale
      * @param timeInMillis Time in milliseconds since the epoch (local time)
      *
      * @return The formatted date string
