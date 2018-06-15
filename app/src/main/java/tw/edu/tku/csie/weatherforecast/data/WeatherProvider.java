@@ -24,7 +24,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
-import tw.edu.tku.csie.weatherforecast.utilities.DateUtils;
+import tw.edu.tku.csie.weatherforecast.utilities.WeatherAppDateUtils;
 
 /**
  * This class serves as the ContentProvider for all of Sunshine's data. This class allows us to
@@ -151,7 +151,7 @@ public class WeatherProvider extends ContentProvider {
                     for (ContentValues value : values) {
                         long weatherDate =
                                 value.getAsLong(WeatherAppContract.WeatherEntry.COLUMN_DATE);
-                        if (!DateUtils.isDateNormalized(weatherDate)) {
+                        if (!WeatherAppDateUtils.isDateNormalized(weatherDate)) {
                             throw new IllegalArgumentException("Date must be normalized to insert");
                         }
 
