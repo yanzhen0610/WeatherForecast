@@ -133,7 +133,7 @@ public class NotificationUtils {
                     .setContentTitle(notificationTitle)
                     .setContentText(notificationText)
                     .setAutoCancel(true)
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                    .setPriority(NotificationCompat.PRIORITY_MIN);
 
             /*
              * This Intent will be triggered when the user clicks the notification. In our case,
