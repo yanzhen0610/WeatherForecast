@@ -19,7 +19,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.CursorLoader;
@@ -31,7 +33,7 @@ import android.view.MenuItem;
 
 import tw.edu.tku.csie.weatherforecast.data.WeatherAppContract;
 import tw.edu.tku.csie.weatherforecast.databinding.ActivityDetailBinding;
-import tw.edu.tku.csie.weatherforecast.utilities.DateUtils;
+import tw.edu.tku.csie.weatherforecast.utilities.WeatherAppDateUtils;
 import tw.edu.tku.csie.weatherforecast.utilities.WeatherUtils;
 
 public class DetailActivity extends AppCompatActivity implements
@@ -180,7 +182,9 @@ public class DetailActivity extends AppCompatActivity implements
                 .setType("text/plain")
                 .setText(mForecastSummary + FORECAST_SHARE_HASHTAG)
                 .getIntent();
-        shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+        }
         return shareIntent;
     }
 
@@ -192,6 +196,7 @@ public class DetailActivity extends AppCompatActivity implements
      *
      * @return A new Loader instance that is ready to start loading.
      */
+    @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int loaderId, Bundle loaderArgs) {
 
@@ -222,7 +227,7 @@ public class DetailActivity extends AppCompatActivity implements
      * @param data   The cursor that is being returned.
      */
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
 
         /*
          * Before we bind the data to the UI that will display that data, we need to check the
@@ -245,7 +250,7 @@ public class DetailActivity extends AppCompatActivity implements
             return;
         }
 
-        /****************
+        /* ***************
          * Weather Icon *
          ****************/
         /* Read weather condition ID from the cursor (ID provided by Open Weather Map) */
@@ -256,7 +261,7 @@ public class DetailActivity extends AppCompatActivity implements
         /* Set the resource ID on the icon to display the art */
         mDetailBinding.primaryInfo.weatherIcon.setImageResource(weatherImageId);
 
-        /****************
+        /* ***************
          * Weather Date *
          ****************/
         /*
@@ -266,14 +271,14 @@ public class DetailActivity extends AppCompatActivity implements
          *
          * When displaying this date, one must add the GMT offset (in milliseconds) to acquire
          * the date representation for the local date in local time.
-         * DateUtils#getFriendlyDateString takes care of this for us.
+         * WeatherAppDateUtils#getFriendlyDateString takes care of this for us.
          */
         long localDateMidnightGmt = data.getLong(INDEX_WEATHER_DATE);
-        String dateText = DateUtils.getFriendlyDateString(this, localDateMidnightGmt, true);
+        String dateText = WeatherAppDateUtils.getFriendlyDateString(this, localDateMidnightGmt, true);
 
         mDetailBinding.primaryInfo.date.setText(dateText);
 
-        /***********************
+        /* **********************
          * Weather Description *
          ***********************/
         /* Use the weatherId to obtain the proper description */
@@ -289,7 +294,7 @@ public class DetailActivity extends AppCompatActivity implements
         /* Set the content description on the weather image (for accessibility purposes) */
         mDetailBinding.primaryInfo.weatherIcon.setContentDescription(descriptionA11y);
 
-        /**************************
+        /* *************************
          * High (max) temperature *
          **************************/
         /* Read high temperature from the cursor (in degrees celsius) */
@@ -308,7 +313,7 @@ public class DetailActivity extends AppCompatActivity implements
         mDetailBinding.primaryInfo.highTemperature.setText(highString);
         mDetailBinding.primaryInfo.highTemperature.setContentDescription(highA11y);
 
-        /*************************
+        /* ************************
          * Low (min) temperature *
          *************************/
         /* Read low temperature from the cursor (in degrees celsius) */
@@ -326,7 +331,7 @@ public class DetailActivity extends AppCompatActivity implements
         mDetailBinding.primaryInfo.lowTemperature.setText(lowString);
         mDetailBinding.primaryInfo.lowTemperature.setContentDescription(lowA11y);
 
-        /************
+        /* ***********
          * Humidity *
          ************/
         /* Read humidity from the cursor */
@@ -341,7 +346,7 @@ public class DetailActivity extends AppCompatActivity implements
 
         mDetailBinding.extraDetails.humidityLabel.setContentDescription(humidityA11y);
 
-        /****************************
+        /* ***************************
          * Wind speed and direction *
          ****************************/
         /* Read wind speed (in MPH) and direction (in compass degrees) from the cursor  */
@@ -357,7 +362,7 @@ public class DetailActivity extends AppCompatActivity implements
 
         mDetailBinding.extraDetails.windLabel.setContentDescription(windA11y);
 
-        /************
+        /* ***********
          * Pressure *
          ************/
         /* Read pressure from the cursor */
@@ -393,6 +398,6 @@ public class DetailActivity extends AppCompatActivity implements
      * @param loader The Loader that is being reset.
      */
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
     }
 }
