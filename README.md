@@ -1,6 +1,6 @@
 # Weather Forecast 全台天氣報報
 
-Too lazy to write comments~
+寫得很趕，新增的地方就沒有加註解了 :(
 
 ## Pics
 
