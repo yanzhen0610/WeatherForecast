@@ -53,7 +53,8 @@ public class SyncTask {
 
             /* Parse the JSON into a list of weather values */
             ContentValues[] weatherValues = OpenWeatherJsonUtils
-                    .getWeatherContentValuesFromJson(context, jsonWeatherResponse);
+//                    .getWeatherContentValuesFromJson(context, jsonWeatherResponse);
+                    .getWeatherContentValuesFromJson(jsonWeatherResponse);
 
             /*
              * In cases where our JSON contained an error code, getWeatherContentValuesFromJson
@@ -63,16 +64,16 @@ public class SyncTask {
              */
             if (weatherValues != null && weatherValues.length != 0) {
                 /* Get a handle on the ContentResolver to delete and insert data */
-                ContentResolver sunshineContentResolver = context.getContentResolver();
+                ContentResolver contentResolver = context.getContentResolver();
 
                 /* Delete old weather data because we don't need to keep multiple days' data */
-                sunshineContentResolver.delete(
+                contentResolver.delete(
                         WeatherAppContract.WeatherEntry.CONTENT_URI,
                         null,
                         null);
 
                 /* Insert our new weather data into Sunshine's ContentProvider */
-                sunshineContentResolver.bulkInsert(
+                contentResolver.bulkInsert(
                         WeatherAppContract.WeatherEntry.CONTENT_URI,
                         weatherValues);
 
