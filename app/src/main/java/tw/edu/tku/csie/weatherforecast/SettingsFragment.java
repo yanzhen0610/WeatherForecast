@@ -25,12 +25,12 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
 
-import tw.edu.tku.csie.weatherforecast.data.WeatherContract;
-import tw.edu.tku.csie.weatherforecast.sync.SunshineSyncUtils;
+import tw.edu.tku.csie.weatherforecast.data.WeatherAppContract;
+import tw.edu.tku.csie.weatherforecast.sync.SyncUtils;
 import tw.edu.tku.csie.weatherforecast.sync.UpdateCityNameByLatitudeAndLongitude;
 import tw.edu.tku.csie.weatherforecast.sync.UpdateLocalizedAndEnglishCityName;
 import tw.edu.tku.csie.weatherforecast.utilities.UpdateCurrentLocation;
-import tw.edu.tku.csie.weatherforecast.utilities.WeatherAppPermissionUtils;
+import tw.edu.tku.csie.weatherforecast.utilities.PermissionUtils;
 
 /**
  * The SettingsFragment serves as the display for all of the user's settings. In Sunshine, the
@@ -67,7 +67,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
     }
 
     private void updateCurrentLocation() {
-        if (WeatherAppPermissionUtils.checkAccessFineLocationPermission(mSettingActivity)) {
+        if (PermissionUtils.checkAccessFineLocationPermission(mSettingActivity)) {
             UpdateCurrentLocation.updateCurrentLocation(mSettingActivity);
 //            mSettingActivity.startService(new Intent(mSettingActivity, UpdateCityNameByLatitudeAndLongitude.class));
             UpdateCityNameByLatitudeAndLongitude.startUpdate(mSettingActivity);
@@ -143,7 +143,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             // we've changed the location
             // Wipe out any potential PlacePicker latlng values so that we can use this text entry.
 //            WeatherAppPreferences.resetLocationCoordinates(mSettingActivity);
-//            SunshineSyncUtils.startImmediateSync(mSettingActivity);
+//            SyncUtils.startImmediateSync(mSettingActivity);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString(getString(R.string.pref_en_location_key),
                     sharedPreferences.getString(key, getString(R.string.pref_location_default)));
@@ -155,23 +155,23 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             updateEditTextLocationTextAndSummary();
         } else if (key.equals(getString(R.string.pref_units_key))) {
             // units have changed. update lists of weather entries accordingly
-            mSettingActivity.getContentResolver().notifyChange(WeatherContract.WeatherEntry.CONTENT_URI, null);
+            mSettingActivity.getContentResolver().notifyChange(WeatherAppContract.WeatherEntry.CONTENT_URI, null);
         } else if (key.equals(getString(R.string.pref_use_current_location_key))) {
 
             boolean value = sharedPreferences.getBoolean(key,
                     getResources().getBoolean(R.bool.pref_use_current_location_by_default));
 
             if (value) {
-                if (WeatherAppPermissionUtils.checkAccessFineLocationPermission(mSettingActivity)) {
+                if (PermissionUtils.checkAccessFineLocationPermission(mSettingActivity)) {
                     UpdateCurrentLocation.updateCurrentLocation(mSettingActivity);
-                    SunshineSyncUtils.startImmediateSync(mSettingActivity);
+                    SyncUtils.startImmediateSync(mSettingActivity);
 //                    mSettingActivity.startService(new Intent(mSettingActivity, UpdateCityNameByLatitudeAndLongitude.class));
                     UpdateCityNameByLatitudeAndLongitude.startUpdate(mSettingActivity);
                 } else {
-                    WeatherAppPermissionUtils.requestAccessFineLocationPermission(mSettingActivity);
+                    PermissionUtils.requestAccessFineLocationPermission(mSettingActivity);
                 }
             } else {
-                SunshineSyncUtils.startImmediateSync(mSettingActivity);
+                SyncUtils.startImmediateSync(mSettingActivity);
             }
 
             mEditTextLocationPreference.setEnabled(!value);

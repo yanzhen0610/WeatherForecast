@@ -20,15 +20,15 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.text.format.DateUtils;
 
+import tw.edu.tku.csie.weatherforecast.data.WeatherAppContract;
 import tw.edu.tku.csie.weatherforecast.data.WeatherAppPreferences;
-import tw.edu.tku.csie.weatherforecast.data.WeatherContract;
 import tw.edu.tku.csie.weatherforecast.utilities.NetworkUtils;
 import tw.edu.tku.csie.weatherforecast.utilities.NotificationUtils;
 import tw.edu.tku.csie.weatherforecast.utilities.OpenWeatherJsonUtils;
 
 import java.net.URL;
 
-public class SunshineSyncTask {
+public class SyncTask {
 
     /**
      * Performs the network request for updated weather, parses the JSON from that request, and
@@ -67,13 +67,13 @@ public class SunshineSyncTask {
 
                 /* Delete old weather data because we don't need to keep multiple days' data */
                 sunshineContentResolver.delete(
-                        WeatherContract.WeatherEntry.CONTENT_URI,
+                        WeatherAppContract.WeatherEntry.CONTENT_URI,
                         null,
                         null);
 
                 /* Insert our new weather data into Sunshine's ContentProvider */
                 sunshineContentResolver.bulkInsert(
-                        WeatherContract.WeatherEntry.CONTENT_URI,
+                        WeatherAppContract.WeatherEntry.CONTENT_URI,
                         weatherValues);
 
                 /*

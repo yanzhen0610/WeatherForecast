@@ -18,13 +18,13 @@ package tw.edu.tku.csie.weatherforecast.data;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-import tw.edu.tku.csie.weatherforecast.utilities.SunshineDateUtils;
+import tw.edu.tku.csie.weatherforecast.utilities.DateUtils;
 
 /**
  * Defines table and column names for the weather database. This class is not necessary, but keeps
  * the code organized.
  */
-public class WeatherContract {
+public class WeatherAppContract {
 
     /*
      * The "Content authority" is a name for the entire content provider, similar to the
@@ -131,8 +131,8 @@ public class WeatherContract {
          * @return The selection part of the weather query for today onwards
          */
         public static String getSqlSelectForTodayOnwards() {
-            long normalizedUtcNow = SunshineDateUtils.normalizeDate(System.currentTimeMillis());
-            return WeatherContract.WeatherEntry.COLUMN_DATE + " >= " + normalizedUtcNow;
+            long normalizedUtcNow = DateUtils.normalizeDate(System.currentTimeMillis());
+            return WeatherAppContract.WeatherEntry.COLUMN_DATE + " >= " + normalizedUtcNow;
         }
     }
 }

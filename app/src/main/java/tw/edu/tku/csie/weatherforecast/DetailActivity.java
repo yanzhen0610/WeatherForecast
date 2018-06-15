@@ -29,10 +29,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import tw.edu.tku.csie.weatherforecast.data.WeatherContract;
+import tw.edu.tku.csie.weatherforecast.data.WeatherAppContract;
 import tw.edu.tku.csie.weatherforecast.databinding.ActivityDetailBinding;
-import tw.edu.tku.csie.weatherforecast.utilities.SunshineDateUtils;
-import tw.edu.tku.csie.weatherforecast.utilities.SunshineWeatherUtils;
+import tw.edu.tku.csie.weatherforecast.utilities.DateUtils;
+import tw.edu.tku.csie.weatherforecast.utilities.WeatherUtils;
 
 public class DetailActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
@@ -48,14 +48,14 @@ public class DetailActivity extends AppCompatActivity implements
      * weather display.
      */
     public static final String[] WEATHER_DETAIL_PROJECTION = {
-            WeatherContract.WeatherEntry.COLUMN_DATE,
-            WeatherContract.WeatherEntry.COLUMN_MAX_TEMP,
-            WeatherContract.WeatherEntry.COLUMN_MIN_TEMP,
-            WeatherContract.WeatherEntry.COLUMN_HUMIDITY,
-            WeatherContract.WeatherEntry.COLUMN_PRESSURE,
-            WeatherContract.WeatherEntry.COLUMN_WIND_SPEED,
-            WeatherContract.WeatherEntry.COLUMN_DEGREES,
-            WeatherContract.WeatherEntry.COLUMN_WEATHER_ID
+            WeatherAppContract.WeatherEntry.COLUMN_DATE,
+            WeatherAppContract.WeatherEntry.COLUMN_MAX_TEMP,
+            WeatherAppContract.WeatherEntry.COLUMN_MIN_TEMP,
+            WeatherAppContract.WeatherEntry.COLUMN_HUMIDITY,
+            WeatherAppContract.WeatherEntry.COLUMN_PRESSURE,
+            WeatherAppContract.WeatherEntry.COLUMN_WIND_SPEED,
+            WeatherAppContract.WeatherEntry.COLUMN_DEGREES,
+            WeatherAppContract.WeatherEntry.COLUMN_WEATHER_ID
     };
 
     /*
@@ -251,7 +251,7 @@ public class DetailActivity extends AppCompatActivity implements
         /* Read weather condition ID from the cursor (ID provided by Open Weather Map) */
         int weatherId = data.getInt(INDEX_WEATHER_CONDITION_ID);
         /* Use our utility method to determine the resource ID for the proper art */
-        int weatherImageId = SunshineWeatherUtils.getLargeArtResourceIdForWeatherCondition(weatherId);
+        int weatherImageId = WeatherUtils.getLargeArtResourceIdForWeatherCondition(weatherId);
 
         /* Set the resource ID on the icon to display the art */
         mDetailBinding.primaryInfo.weatherIcon.setImageResource(weatherImageId);
@@ -266,10 +266,10 @@ public class DetailActivity extends AppCompatActivity implements
          *
          * When displaying this date, one must add the GMT offset (in milliseconds) to acquire
          * the date representation for the local date in local time.
-         * SunshineDateUtils#getFriendlyDateString takes care of this for us.
+         * DateUtils#getFriendlyDateString takes care of this for us.
          */
         long localDateMidnightGmt = data.getLong(INDEX_WEATHER_DATE);
-        String dateText = SunshineDateUtils.getFriendlyDateString(this, localDateMidnightGmt, true);
+        String dateText = DateUtils.getFriendlyDateString(this, localDateMidnightGmt, true);
 
         mDetailBinding.primaryInfo.date.setText(dateText);
 
@@ -277,7 +277,7 @@ public class DetailActivity extends AppCompatActivity implements
          * Weather Description *
          ***********************/
         /* Use the weatherId to obtain the proper description */
-        String description = SunshineWeatherUtils.getStringForWeatherCondition(this, weatherId);
+        String description = WeatherUtils.getStringForWeatherCondition(this, weatherId);
 
         /* Create the accessibility (a11y) String from the weather description */
         String descriptionA11y = getString(R.string.a11y_forecast, description);
@@ -299,7 +299,7 @@ public class DetailActivity extends AppCompatActivity implements
          * the temperature. This method will also append either °C or °F to the temperature
          * String.
          */
-        String highString = SunshineWeatherUtils.formatTemperature(this, highInCelsius);
+        String highString = WeatherUtils.formatTemperature(this, highInCelsius);
 
         /* Create the accessibility (a11y) String from the weather description */
         String highA11y = getString(R.string.a11y_high_temp, highString);
@@ -318,7 +318,7 @@ public class DetailActivity extends AppCompatActivity implements
          * the temperature. This method will also append either °C or °F to the temperature
          * String.
          */
-        String lowString = SunshineWeatherUtils.formatTemperature(this, lowInCelsius);
+        String lowString = WeatherUtils.formatTemperature(this, lowInCelsius);
 
         String lowA11y = getString(R.string.a11y_low_temp, lowString);
 
@@ -347,7 +347,7 @@ public class DetailActivity extends AppCompatActivity implements
         /* Read wind speed (in MPH) and direction (in compass degrees) from the cursor  */
         float windSpeed = data.getFloat(INDEX_WEATHER_WIND_SPEED);
         float windDirection = data.getFloat(INDEX_WEATHER_DEGREES);
-        String windString = SunshineWeatherUtils.getFormattedWind(this, windSpeed, windDirection);
+        String windString = WeatherUtils.getFormattedWind(this, windSpeed, windDirection);
 
         String windA11y = getString(R.string.a11y_wind, windString);
 
@@ -365,7 +365,7 @@ public class DetailActivity extends AppCompatActivity implements
 
         /*
          * Format the pressure text using string resources. The reason we directly access
-         * resources using getString rather than using a method from SunshineWeatherUtils as
+         * resources using getString rather than using a method from WeatherUtils as
          * we have for other data displayed in this Activity is because there is no
          * additional logic that needs to be considered in order to properly display the
          * pressure.

@@ -22,14 +22,14 @@ import android.content.Intent;
  * An {@link IntentService} subclass for handling asynchronous task requests in
  * a service on a separate handler thread.
  */
-public class SunshineSyncIntentService extends IntentService {
+public class SyncIntentService extends IntentService {
 
-    public SunshineSyncIntentService() {
-        super("SunshineSyncIntentService");
+    public SyncIntentService() {
+        super("SyncIntentService");
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        SunshineSyncTask.syncWeather(this);
+        SyncTask.syncWeather(this);
     }
 }

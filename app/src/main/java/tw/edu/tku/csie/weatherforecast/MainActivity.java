@@ -32,12 +32,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import tw.edu.tku.csie.weatherforecast.data.WeatherAppContract;
 import tw.edu.tku.csie.weatherforecast.data.WeatherAppPreferences;
-import tw.edu.tku.csie.weatherforecast.data.WeatherContract;
-import tw.edu.tku.csie.weatherforecast.sync.SunshineSyncIntentService;
-import tw.edu.tku.csie.weatherforecast.sync.SunshineSyncUtils;
+import tw.edu.tku.csie.weatherforecast.sync.SyncIntentService;
+import tw.edu.tku.csie.weatherforecast.sync.SyncUtils;
 import tw.edu.tku.csie.weatherforecast.utilities.UpdateCurrentLocation;
-import tw.edu.tku.csie.weatherforecast.utilities.WeatherAppPermissionUtils;
+import tw.edu.tku.csie.weatherforecast.utilities.PermissionUtils;
 
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>,
@@ -50,10 +50,10 @@ public class MainActivity extends AppCompatActivity implements
      * weather data.
      */
     public static final String[] MAIN_FORECAST_PROJECTION = {
-            WeatherContract.WeatherEntry.COLUMN_DATE,
-            WeatherContract.WeatherEntry.COLUMN_MAX_TEMP,
-            WeatherContract.WeatherEntry.COLUMN_MIN_TEMP,
-            WeatherContract.WeatherEntry.COLUMN_WEATHER_ID,
+            WeatherAppContract.WeatherEntry.COLUMN_DATE,
+            WeatherAppContract.WeatherEntry.COLUMN_MAX_TEMP,
+            WeatherAppContract.WeatherEntry.COLUMN_MIN_TEMP,
+            WeatherAppContract.WeatherEntry.COLUMN_WEATHER_ID,
     };
 
     /*
@@ -155,14 +155,14 @@ public class MainActivity extends AppCompatActivity implements
          */
         getSupportLoaderManager().initLoader(ID_FORECAST_LOADER, null, this);
 
-        SunshineSyncUtils.initialize(this);
+        SyncUtils.initialize(this);
 
         updateLocation();
     }
 
     private void updateLocation() {
         if (WeatherAppPreferences.isUseCurrentLocation(this)) {
-            if (WeatherAppPermissionUtils.checkAccessFineLocationPermission(this)) {
+            if (PermissionUtils.checkAccessFineLocationPermission(this)) {
                 UpdateCurrentLocation.updateCurrentLocation(this);
             } else {
                 WeatherAppPreferences.setUseCurrentLocation(this, false);
@@ -213,15 +213,15 @@ public class MainActivity extends AppCompatActivity implements
 
             case ID_FORECAST_LOADER:
                 /* URI for all rows of weather data in our weather table */
-                Uri forecastQueryUri = WeatherContract.WeatherEntry.CONTENT_URI;
+                Uri forecastQueryUri = WeatherAppContract.WeatherEntry.CONTENT_URI;
                 /* Sort order: Ascending by date */
-                String sortOrder = WeatherContract.WeatherEntry.COLUMN_DATE + " ASC";
+                String sortOrder = WeatherAppContract.WeatherEntry.COLUMN_DATE + " ASC";
                 /*
                  * A SELECTION in SQL declares which rows you'd like to return. In our case, we
                  * want all weather data from today onwards that is stored in our weather table.
                  * We created a handy method to do that in our WeatherEntry class.
                  */
-                String selection = WeatherContract.WeatherEntry.getSqlSelectForTodayOnwards();
+                String selection = WeatherAppContract.WeatherEntry.getSqlSelectForTodayOnwards();
 
                 return new CursorLoader(this,
                         forecastQueryUri,
@@ -275,12 +275,12 @@ public class MainActivity extends AppCompatActivity implements
      * This method is for responding to clicks from our list.
      *
      * @param date Normalized UTC time that represents the local date of the weather in GMT time.
-     * @see WeatherContract.WeatherEntry#COLUMN_DATE
+     * @see WeatherAppContract.WeatherEntry#COLUMN_DATE
      */
     @Override
     public void onClick(long date) {
         Intent weatherDetailIntent = new Intent(MainActivity.this, DetailActivity.class);
-        Uri uriForDateClicked = WeatherContract.WeatherEntry.buildWeatherUriWithDate(date);
+        Uri uriForDateClicked = WeatherAppContract.WeatherEntry.buildWeatherUriWithDate(date);
         weatherDetailIntent.setData(uriForDateClicked);
         startActivity(weatherDetailIntent);
     }
@@ -336,14 +336,14 @@ public class MainActivity extends AppCompatActivity implements
 
     private void refresh() {
         if (WeatherAppPreferences.isUseCurrentLocation(this)) {
-            if (WeatherAppPermissionUtils.checkAccessFineLocationPermission(this)) {
+            if (PermissionUtils.checkAccessFineLocationPermission(this)) {
                 UpdateCurrentLocation.updateCurrentLocation(this);
-                startService(new Intent(this, SunshineSyncIntentService.class));
+                startService(new Intent(this, SyncIntentService.class));
             } else {
                 WeatherAppPreferences.setUseCurrentLocation(this, false);
             }
         } else {
-            startService(new Intent(this, SunshineSyncIntentService.class));
+            startService(new Intent(this, SyncIntentService.class));
         }
     }
 

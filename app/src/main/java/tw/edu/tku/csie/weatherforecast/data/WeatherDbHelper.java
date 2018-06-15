@@ -62,27 +62,27 @@ public class WeatherDbHelper extends SQLiteOpenHelper {
          */
         final String SQL_CREATE_WEATHER_TABLE =
 
-                "CREATE TABLE " + WeatherContract.WeatherEntry.TABLE_NAME + " (" +
+                "CREATE TABLE " + WeatherAppContract.WeatherEntry.TABLE_NAME + " (" +
 
                 /*
                  * WeatherEntry did not explicitly declare a column called "_ID". However,
                  * WeatherEntry implements the interface, "BaseColumns", which does have a field
                  * named "_ID". We use that here to designate our table's primary key.
                  */
-                WeatherContract.WeatherEntry._ID               + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                WeatherAppContract.WeatherEntry._ID               + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 
-                WeatherContract.WeatherEntry.COLUMN_DATE       + " INTEGER NOT NULL, "                 +
+                WeatherAppContract.WeatherEntry.COLUMN_DATE       + " INTEGER NOT NULL, "                 +
 
-                WeatherContract.WeatherEntry.COLUMN_WEATHER_ID + " INTEGER NOT NULL,"                  +
+                WeatherAppContract.WeatherEntry.COLUMN_WEATHER_ID + " INTEGER NOT NULL,"                  +
 
-                WeatherContract.WeatherEntry.COLUMN_MIN_TEMP   + " REAL NOT NULL, "                    +
-                WeatherContract.WeatherEntry.COLUMN_MAX_TEMP   + " REAL NOT NULL, "                    +
+                WeatherAppContract.WeatherEntry.COLUMN_MIN_TEMP   + " REAL NOT NULL, "                    +
+                WeatherAppContract.WeatherEntry.COLUMN_MAX_TEMP   + " REAL NOT NULL, "                    +
 
-                WeatherContract.WeatherEntry.COLUMN_HUMIDITY   + " REAL NOT NULL, "                    +
-                WeatherContract.WeatherEntry.COLUMN_PRESSURE   + " REAL NOT NULL, "                    +
+                WeatherAppContract.WeatherEntry.COLUMN_HUMIDITY   + " REAL NOT NULL, "                    +
+                WeatherAppContract.WeatherEntry.COLUMN_PRESSURE   + " REAL NOT NULL, "                    +
 
-                WeatherContract.WeatherEntry.COLUMN_WIND_SPEED + " REAL NOT NULL, "                    +
-                WeatherContract.WeatherEntry.COLUMN_DEGREES    + " REAL NOT NULL, "                    +
+                WeatherAppContract.WeatherEntry.COLUMN_WIND_SPEED + " REAL NOT NULL, "                    +
+                WeatherAppContract.WeatherEntry.COLUMN_DEGREES    + " REAL NOT NULL, "                    +
 
                 /*
                  * To ensure this table can only contain one weather entry per date, we declare
@@ -90,7 +90,7 @@ public class WeatherDbHelper extends SQLiteOpenHelper {
                  * SQLite that if we have a weather entry for a certain date and we attempt to
                  * insert another weather entry with that date, we replace the old weather entry.
                  */
-                " UNIQUE (" + WeatherContract.WeatherEntry.COLUMN_DATE + ") ON CONFLICT REPLACE);";
+                " UNIQUE (" + WeatherAppContract.WeatherEntry.COLUMN_DATE + ") ON CONFLICT REPLACE);";
 
         /*
          * After we've spelled out our SQLite table creation statement above, we actually execute
@@ -113,7 +113,7 @@ public class WeatherDbHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + WeatherContract.WeatherEntry.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + WeatherAppContract.WeatherEntry.TABLE_NAME);
         onCreate(sqLiteDatabase);
     }
 }

@@ -21,7 +21,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
-import tw.edu.tku.csie.weatherforecast.data.WeatherContract;
+import tw.edu.tku.csie.weatherforecast.data.WeatherAppContract;
+
 import com.firebase.jobdispatcher.Constraint;
 import com.firebase.jobdispatcher.Driver;
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
@@ -32,7 +33,7 @@ import com.firebase.jobdispatcher.Trigger;
 
 import java.util.concurrent.TimeUnit;
 
-public class SunshineSyncUtils {
+public class SyncUtils {
 
     /*
      * Interval at which to sync with the weather. Use TimeUnit for convenience, rather than
@@ -59,7 +60,7 @@ public class SunshineSyncUtils {
         /* Create the Job to periodically sync Sunshine */
         Job syncSunshineJob = dispatcher.newJobBuilder()
                 /* The Service that will be used to sync Sunshine's data */
-                .setService(SunshineFirebaseJobService.class)
+                .setService(FirebaseJobService.class)
                 /* Set the UNIQUE tag used to identify this Job */
                 .setTag(SUNSHINE_SYNC_TAG)
                 /*
@@ -133,7 +134,7 @@ public class SunshineSyncUtils {
             public void run() {
 
                 /* URI for every row of weather data in our weather table*/
-                Uri forecastQueryUri = WeatherContract.WeatherEntry.CONTENT_URI;
+                Uri forecastQueryUri = WeatherAppContract.WeatherEntry.CONTENT_URI;
 
                 /*
                  * Since this query is going to be used only as a check to see if we have any
@@ -141,8 +142,8 @@ public class SunshineSyncUtils {
                  * row. In our queries where we display data, we need to PROJECT more columns
                  * to determine what weather details need to be displayed.
                  */
-                String[] projectionColumns = {WeatherContract.WeatherEntry._ID};
-                String selectionStatement = WeatherContract.WeatherEntry
+                String[] projectionColumns = {WeatherAppContract.WeatherEntry._ID};
+                String selectionStatement = WeatherAppContract.WeatherEntry
                         .getSqlSelectForTodayOnwards();
 
                 /* Here, we perform the query to check to see if we have any weather data */
@@ -186,7 +187,7 @@ public class SunshineSyncUtils {
      * @param context The Context used to start the IntentService for the sync.
      */
     public static void startImmediateSync(@NonNull final Context context) {
-        Intent intentToSyncImmediately = new Intent(context, SunshineSyncIntentService.class);
+        Intent intentToSyncImmediately = new Intent(context, SyncIntentService.class);
         context.startService(intentToSyncImmediately);
     }
 }

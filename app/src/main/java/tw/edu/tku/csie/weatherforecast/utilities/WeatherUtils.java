@@ -26,9 +26,9 @@ import tw.edu.tku.csie.weatherforecast.data.WeatherAppPreferences;
  * from kph to mph, and from degrees to NSEW.  It also contains the mapping of weather condition
  * codes in OpenWeatherMap to strings.  These strings are contained
  */
-public final class SunshineWeatherUtils {
+public final class WeatherUtils {
 
-    private static final String LOG_TAG = SunshineWeatherUtils.class.getSimpleName();
+    private static final String LOG_TAG = WeatherUtils.class.getSimpleName();
 
     /**
      * This method will convert a temperature from Celsius to Fahrenheit.

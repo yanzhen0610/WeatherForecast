@@ -18,8 +18,7 @@ package tw.edu.tku.csie.weatherforecast.utilities;
 import android.content.ContentValues;
 import android.content.Context;
 
-import tw.edu.tku.csie.weatherforecast.data.WeatherAppPreferences;
-import tw.edu.tku.csie.weatherforecast.data.WeatherContract;
+import tw.edu.tku.csie.weatherforecast.data.WeatherAppContract;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -120,9 +119,9 @@ public final class OpenWeatherJsonUtils {
          * going to take advantage of that to get a nice normalized UTC date for all of our weather.
          */
 //        long now = System.currentTimeMillis();
-//        long normalizedUtcStartDay = SunshineDateUtils.normalizeDate(now);
+//        long normalizedUtcStartDay = DateUtils.normalizeDate(now);
 
-        long normalizedUtcStartDay = SunshineDateUtils.getNormalizedUtcDateForToday();
+        long normalizedUtcStartDay = DateUtils.getNormalizedUtcDateForToday();
 
         for (int i = 0; i < jsonWeatherArray.length(); i++) {
 
@@ -144,7 +143,7 @@ public final class OpenWeatherJsonUtils {
              * We ignore all the datetime values embedded in the JSON and assume that
              * the values are returned in-order by day (which is not guaranteed to be correct).
              */
-            dateTimeMillis = normalizedUtcStartDay + SunshineDateUtils.DAY_IN_MILLIS * i;
+            dateTimeMillis = normalizedUtcStartDay + DateUtils.DAY_IN_MILLIS * i;
 
             JSONObject mainInfo = dayForecast.getJSONObject(OWN_MAIN_INFO);
             JSONObject windInfo = dayForecast.getJSONObject(OWN_WIND_INFO);
@@ -177,14 +176,14 @@ public final class OpenWeatherJsonUtils {
             low = mainInfo.getDouble(OWM_MIN);
 
             ContentValues weatherValues = new ContentValues();
-            weatherValues.put(WeatherContract.WeatherEntry.COLUMN_DATE, dateTimeMillis);
-            weatherValues.put(WeatherContract.WeatherEntry.COLUMN_HUMIDITY, humidity);
-            weatherValues.put(WeatherContract.WeatherEntry.COLUMN_PRESSURE, pressure);
-            weatherValues.put(WeatherContract.WeatherEntry.COLUMN_WIND_SPEED, windSpeed);
-            weatherValues.put(WeatherContract.WeatherEntry.COLUMN_DEGREES, windDirection);
-            weatherValues.put(WeatherContract.WeatherEntry.COLUMN_MAX_TEMP, high);
-            weatherValues.put(WeatherContract.WeatherEntry.COLUMN_MIN_TEMP, low);
-            weatherValues.put(WeatherContract.WeatherEntry.COLUMN_WEATHER_ID, weatherId);
+            weatherValues.put(WeatherAppContract.WeatherEntry.COLUMN_DATE, dateTimeMillis);
+            weatherValues.put(WeatherAppContract.WeatherEntry.COLUMN_HUMIDITY, humidity);
+            weatherValues.put(WeatherAppContract.WeatherEntry.COLUMN_PRESSURE, pressure);
+            weatherValues.put(WeatherAppContract.WeatherEntry.COLUMN_WIND_SPEED, windSpeed);
+            weatherValues.put(WeatherAppContract.WeatherEntry.COLUMN_DEGREES, windDirection);
+            weatherValues.put(WeatherAppContract.WeatherEntry.COLUMN_MAX_TEMP, high);
+            weatherValues.put(WeatherAppContract.WeatherEntry.COLUMN_MIN_TEMP, low);
+            weatherValues.put(WeatherAppContract.WeatherEntry.COLUMN_WEATHER_ID, weatherId);
 
             weatherContentValues[i] = weatherValues;
         }

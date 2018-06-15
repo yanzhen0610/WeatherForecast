@@ -24,7 +24,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
-import tw.edu.tku.csie.weatherforecast.utilities.SunshineDateUtils;
+import tw.edu.tku.csie.weatherforecast.utilities.DateUtils;
 
 /**
  * This class serves as the ContentProvider for all of Sunshine's data. This class allows us to
@@ -78,7 +78,7 @@ public class WeatherProvider extends ContentProvider {
          * return for the root URI. It's common to use NO_MATCH as the code for this case.
          */
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
-        final String authority = WeatherContract.CONTENT_AUTHORITY;
+        final String authority = WeatherAppContract.CONTENT_AUTHORITY;
 
         /*
          * For each type of URI you want to add, create a corresponding code. Preferably, these are
@@ -87,14 +87,14 @@ public class WeatherProvider extends ContentProvider {
          */
 
         /* This URI is content://com.example.android.sunshine/weather/ */
-        matcher.addURI(authority, WeatherContract.PATH_WEATHER, CODE_WEATHER);
+        matcher.addURI(authority, WeatherAppContract.PATH_WEATHER, CODE_WEATHER);
 
         /*
          * This URI would look something like content://com.example.android.sunshine/weather/1472214172
          * The "/#" signifies to the UriMatcher that if PATH_WEATHER is followed by ANY number,
          * that it should return the CODE_WEATHER_WITH_DATE code
          */
-        matcher.addURI(authority, WeatherContract.PATH_WEATHER + "/#", CODE_WEATHER_WITH_DATE);
+        matcher.addURI(authority, WeatherAppContract.PATH_WEATHER + "/#", CODE_WEATHER_WITH_DATE);
 
         return matcher;
     }
@@ -150,12 +150,12 @@ public class WeatherProvider extends ContentProvider {
                 try {
                     for (ContentValues value : values) {
                         long weatherDate =
-                                value.getAsLong(WeatherContract.WeatherEntry.COLUMN_DATE);
-                        if (!SunshineDateUtils.isDateNormalized(weatherDate)) {
+                                value.getAsLong(WeatherAppContract.WeatherEntry.COLUMN_DATE);
+                        if (!DateUtils.isDateNormalized(weatherDate)) {
                             throw new IllegalArgumentException("Date must be normalized to insert");
                         }
 
-                        long _id = db.insert(WeatherContract.WeatherEntry.TABLE_NAME, null, value);
+                        long _id = db.insert(WeatherAppContract.WeatherEntry.TABLE_NAME, null, value);
                         if (_id != -1) {
                             rowsInserted++;
                         }
@@ -235,7 +235,7 @@ public class WeatherProvider extends ContentProvider {
 
                 cursor = mOpenHelper.getReadableDatabase().query(
                         /* Table we are going to query */
-                        WeatherContract.WeatherEntry.TABLE_NAME,
+                        WeatherAppContract.WeatherEntry.TABLE_NAME,
                         /*
                          * A projection designates the columns we want returned in our Cursor.
                          * Passing null will return all columns of data within the Cursor.
@@ -252,7 +252,7 @@ public class WeatherProvider extends ContentProvider {
                          * within the selectionArguments array will be inserted into the
                          * selection statement by SQLite under the hood.
                          */
-                        WeatherContract.WeatherEntry.COLUMN_DATE + " = ? ",
+                        WeatherAppContract.WeatherEntry.COLUMN_DATE + " = ? ",
                         selectionArguments,
                         null,
                         null,
@@ -274,7 +274,7 @@ public class WeatherProvider extends ContentProvider {
              */
             case CODE_WEATHER: {
                 cursor = mOpenHelper.getReadableDatabase().query(
-                        WeatherContract.WeatherEntry.TABLE_NAME,
+                        WeatherAppContract.WeatherEntry.TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
@@ -320,7 +320,7 @@ public class WeatherProvider extends ContentProvider {
 
             case CODE_WEATHER:
                 numRowsDeleted = mOpenHelper.getWritableDatabase().delete(
-                        WeatherContract.WeatherEntry.TABLE_NAME,
+                        WeatherAppContract.WeatherEntry.TABLE_NAME,
                         selection,
                         selectionArgs);
 

@@ -49,7 +49,7 @@ public class UpdateLocalizedAndEnglishCityName extends IntentService {
             Address address = engAddresses.get(0);
             String location = address.getLocality();
             WeatherAppPreferences.setEngPreferredWeatherLocation(this, location);
-            SunshineSyncUtils.startImmediateSync(this);
+            SyncUtils.startImmediateSync(this);
         }
     }
 

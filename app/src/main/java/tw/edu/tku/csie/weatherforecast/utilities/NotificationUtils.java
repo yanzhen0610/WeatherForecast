@@ -15,8 +15,8 @@ import android.support.v4.content.ContextCompat;
 
 import tw.edu.tku.csie.weatherforecast.DetailActivity;
 import tw.edu.tku.csie.weatherforecast.R;
+import tw.edu.tku.csie.weatherforecast.data.WeatherAppContract;
 import tw.edu.tku.csie.weatherforecast.data.WeatherAppPreferences;
-import tw.edu.tku.csie.weatherforecast.data.WeatherContract;
 
 public class NotificationUtils {
 
@@ -25,9 +25,9 @@ public class NotificationUtils {
      * the user know there is new weather data available.
      */
     public static final String[] WEATHER_NOTIFICATION_PROJECTION = {
-            WeatherContract.WeatherEntry.COLUMN_WEATHER_ID,
-            WeatherContract.WeatherEntry.COLUMN_MAX_TEMP,
-            WeatherContract.WeatherEntry.COLUMN_MIN_TEMP,
+            WeatherAppContract.WeatherEntry.COLUMN_WEATHER_ID,
+            WeatherAppContract.WeatherEntry.COLUMN_MAX_TEMP,
+            WeatherAppContract.WeatherEntry.COLUMN_MIN_TEMP,
     };
 
     /*
@@ -54,11 +54,11 @@ public class NotificationUtils {
     public static void notifyUserOfNewWeather(Context context) {
 
         /* Build the URI for today's weather in order to show up to date data in notification */
-        Uri todaysWeatherUri = WeatherContract.WeatherEntry
-                .buildWeatherUriWithDate(SunshineDateUtils.normalizeDate(System.currentTimeMillis()));
+        Uri todaysWeatherUri = WeatherAppContract.WeatherEntry
+                .buildWeatherUriWithDate(DateUtils.normalizeDate(System.currentTimeMillis()));
 
         /*
-         * The MAIN_FORECAST_PROJECTION array passed in as the second parameter is defined in our WeatherContract
+         * The MAIN_FORECAST_PROJECTION array passed in as the second parameter is defined in our WeatherAppContract
          * class and is used to limit the columns returned in our cursor.
          */
         Cursor todayWeatherCursor = context.getContentResolver().query(
@@ -80,7 +80,7 @@ public class NotificationUtils {
             double low = todayWeatherCursor.getDouble(INDEX_MIN_TEMP);
 
             Resources resources = context.getResources();
-            int largeArtResourceId = SunshineWeatherUtils
+            int largeArtResourceId = WeatherUtils
                     .getLargeArtResourceIdForWeatherCondition(weatherId);
 
             Bitmap largeIcon = BitmapFactory.decodeResource(
@@ -92,7 +92,7 @@ public class NotificationUtils {
             String notificationText = getNotificationText(context, weatherId, high, low);
 
             /* getSmallArtResourceIdForWeatherCondition returns the proper art to show given an ID */
-            int smallArtResourceId = SunshineWeatherUtils
+            int smallArtResourceId = WeatherUtils
                     .getSmallArtResourceIdForWeatherCondition(weatherId);
 
             /*
@@ -162,7 +162,7 @@ public class NotificationUtils {
          * Short description of the weather, as provided by the API.
          * e.g "clear" vs "sky is clear".
          */
-        String shortDescription = SunshineWeatherUtils
+        String shortDescription = WeatherUtils
                 .getStringForWeatherCondition(context, weatherId);
 
         String notificationFormat = context.getString(R.string.format_notification);
@@ -170,8 +170,8 @@ public class NotificationUtils {
         /* Using String's format method, we create the forecast summary */
         String notificationText = String.format(notificationFormat,
                 shortDescription,
-                SunshineWeatherUtils.formatTemperature(context, high),
-                SunshineWeatherUtils.formatTemperature(context, low));
+                WeatherUtils.formatTemperature(context, high),
+                WeatherUtils.formatTemperature(context, low));
 
         return notificationText;
     }

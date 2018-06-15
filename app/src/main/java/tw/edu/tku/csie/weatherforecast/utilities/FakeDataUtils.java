@@ -3,13 +3,13 @@ package tw.edu.tku.csie.weatherforecast.utilities;
 import android.content.ContentValues;
 import android.content.Context;
 
-import tw.edu.tku.csie.weatherforecast.data.WeatherContract;
+import tw.edu.tku.csie.weatherforecast.data.WeatherAppContract;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static tw.edu.tku.csie.weatherforecast.data.WeatherContract.WeatherEntry;
+import static tw.edu.tku.csie.weatherforecast.data.WeatherAppContract.WeatherEntry;
 
 public class FakeDataUtils {
 
@@ -40,7 +40,7 @@ public class FakeDataUtils {
      */
     public static void insertFakeData(Context context) {
         //Get today's normalized date
-        long today = SunshineDateUtils.normalizeDate(System.currentTimeMillis());
+        long today = DateUtils.normalizeDate(System.currentTimeMillis());
         List<ContentValues> fakeValues = new ArrayList<ContentValues>();
         //loop over 7 days starting today onwards
         for(int i=0; i<7; i++) {
@@ -48,7 +48,7 @@ public class FakeDataUtils {
         }
         // Bulk Insert our new weather data into Sunshine's Database
         context.getContentResolver().bulkInsert(
-                WeatherContract.WeatherEntry.CONTENT_URI,
+                WeatherAppContract.WeatherEntry.CONTENT_URI,
                 fakeValues.toArray(new ContentValues[7]));
     }
 }

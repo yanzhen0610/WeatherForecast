@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Class for handling date conversions that are useful for Sunshine.
  */
-public final class SunshineDateUtils {
+public final class DateUtils {
 
     /* Milliseconds in a day */
     public static final long DAY_IN_MILLIS = TimeUnit.DAYS.toMillis(1);
@@ -250,12 +250,12 @@ public final class SunshineDateUtils {
             /* If the input date is less than a week in the future, just return the day name. */
             return getDayName(context, localDate);
         } else {
-            int flags = DateUtils.FORMAT_SHOW_DATE
-                    | DateUtils.FORMAT_NO_YEAR
-                    | DateUtils.FORMAT_ABBREV_ALL
-                    | DateUtils.FORMAT_SHOW_WEEKDAY;
+            int flags = android.text.format.DateUtils.FORMAT_SHOW_DATE
+                    | android.text.format.DateUtils.FORMAT_NO_YEAR
+                    | android.text.format.DateUtils.FORMAT_ABBREV_ALL
+                    | android.text.format.DateUtils.FORMAT_SHOW_WEEKDAY;
 
-            return DateUtils.formatDateTime(context, localDate, flags);
+            return android.text.format.DateUtils.formatDateTime(context, localDate, flags);
         }
     }
 
@@ -269,11 +269,11 @@ public final class SunshineDateUtils {
      * @return The formatted date string
      */
     private static String getReadableDateString(Context context, long timeInMillis) {
-        int flags = DateUtils.FORMAT_SHOW_DATE
-                | DateUtils.FORMAT_NO_YEAR
-                | DateUtils.FORMAT_SHOW_WEEKDAY;
+        int flags = android.text.format.DateUtils.FORMAT_SHOW_DATE
+                | android.text.format.DateUtils.FORMAT_NO_YEAR
+                | android.text.format.DateUtils.FORMAT_SHOW_WEEKDAY;
 
-        return DateUtils.formatDateTime(context, timeInMillis, flags);
+        return android.text.format.DateUtils.formatDateTime(context, timeInMillis, flags);
     }
 
     /**
