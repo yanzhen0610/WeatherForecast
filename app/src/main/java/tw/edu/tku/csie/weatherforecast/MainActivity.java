@@ -23,6 +23,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -77,6 +78,8 @@ public class MainActivity extends AppCompatActivity implements
      */
     private static final int ID_FORECAST_LOADER = 44;
 
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
     private ForecastAdapter mForecastAdapter;
     private RecyclerView mRecyclerView;
     private int mPosition = RecyclerView.NO_POSITION;
@@ -90,11 +93,13 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_forecast);
         getSupportActionBar().setElevation(0f);
 
+        mSwipeRefreshLayout = findViewById(R.id.weather_forecast_swipe_refresh);
+
         /*
          * Using findViewById, we get a reference to our RecyclerView from xml. This allows us to
          * do things like set the adapter of the RecyclerView and toggle the visibility.
          */
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_forecast);
+        mRecyclerView = findViewById(R.id.recyclerview_forecast);
 
         /*
          * The ProgressBar that will indicate to the user that we are loading data. It will be
@@ -103,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements
          * Please note: This so called "ProgressBar" isn't a bar by default. It is more of a
          * circle. We didn't make the rules (or the names of Views), we just follow them.
          */
-        mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
+        mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
 
         /*
          * A LinearLayoutManager is responsible for measuring and positioning item views within a
@@ -145,6 +150,13 @@ public class MainActivity extends AppCompatActivity implements
 
         /* Setting the adapter attaches it to the RecyclerView in our layout. */
         mRecyclerView.setAdapter(mForecastAdapter);
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh();
+            }
+        });
 
 
         showLoading();
@@ -256,6 +268,7 @@ public class MainActivity extends AppCompatActivity implements
         if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
         mRecyclerView.smoothScrollToPosition(mPosition);
         if (data.getCount() != 0) showWeatherDataView();
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     /**
@@ -271,6 +284,7 @@ public class MainActivity extends AppCompatActivity implements
          * displaying the data.
          */
         mForecastAdapter.swapCursor(null);
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     /**
@@ -340,12 +354,12 @@ public class MainActivity extends AppCompatActivity implements
         if (WeatherAppPreferences.isUseCurrentLocation(this)) {
             if (PermissionUtils.checkAccessFineLocationPermission(this)) {
                 UpdateCurrentLocation.updateCurrentLocation(this);
-                startService(new Intent(this, SyncIntentService.class));
+                SyncUtils.startImmediateSync(this);
             } else {
                 WeatherAppPreferences.setUseCurrentLocation(this, false);
             }
         } else {
-            startService(new Intent(this, SyncIntentService.class));
+            SyncUtils.startImmediateSync(this);
         }
     }
 
