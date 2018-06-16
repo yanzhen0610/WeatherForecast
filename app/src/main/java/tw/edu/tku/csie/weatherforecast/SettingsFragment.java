@@ -118,6 +118,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         updateEditTextLocationTextAndSummary();
         updateCurrentLocation();
         UpdateCityNameByLatitudeAndLongitude.startUpdate(mSettingActivity);
+        UpdateLocalizedAndEnglishCityName.startUpdate(mSettingActivity);
     }
 
     @Override
