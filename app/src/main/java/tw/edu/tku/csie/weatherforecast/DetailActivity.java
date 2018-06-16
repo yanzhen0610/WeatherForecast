@@ -26,7 +26,10 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.transition.Explode;
+import android.transition.Slide;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -38,6 +41,14 @@ import tw.edu.tku.csie.weatherforecast.utilities.WeatherUtils;
 
 public class DetailActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
+
+    /*
+     * for transition
+     */
+    public static final String VIEW_NAME_WEATHER_ICON = "detail:weather:icon";
+    public static final String VIEW_NAME_WEATHER_DESCRIPTION = "detail:weather:description";
+    public static final String VIEW_NAME_WEATHER_HIGH_TEMP = "detail:weather:high_temp";
+    public static final String VIEW_NAME_WEATHER_LOW_TEMP = "detail:weather:low_temp";
 
     /*
      * In this Activity, you can share the selected day's forecast. No social sharing is complete
@@ -109,8 +120,20 @@ public class DetailActivity extends AppCompatActivity implements
         mUri = getIntent().getData();
         if (mUri == null) throw new NullPointerException("URI for DetailActivity cannot be null");
 
+        setupTransition();
+
         /* This connects our Activity into the loader lifecycle. */
         getSupportLoaderManager().initLoader(ID_DETAIL_LOADER, null, this);
+    }
+
+    private void setupTransition() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ViewCompat.setTransitionName(mDetailBinding.primaryInfo.weatherIcon, VIEW_NAME_WEATHER_ICON);
+            ViewCompat.setTransitionName(mDetailBinding.primaryInfo.weatherDescription, VIEW_NAME_WEATHER_DESCRIPTION);
+            ViewCompat.setTransitionName(mDetailBinding.primaryInfo.highTemperature, VIEW_NAME_WEATHER_HIGH_TEMP);
+            ViewCompat.setTransitionName(mDetailBinding.primaryInfo.lowTemperature, VIEW_NAME_WEATHER_LOW_TEMP);
+            getWindow().setExitTransition(new Slide());
+        }
     }
 
     /**

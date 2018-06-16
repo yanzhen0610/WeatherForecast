@@ -18,11 +18,14 @@ package tw.edu.tku.csie.weatherforecast;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -36,7 +39,6 @@ import android.widget.ProgressBar;
 
 import tw.edu.tku.csie.weatherforecast.data.WeatherAppContract;
 import tw.edu.tku.csie.weatherforecast.data.WeatherAppPreferences;
-import tw.edu.tku.csie.weatherforecast.sync.SyncIntentService;
 import tw.edu.tku.csie.weatherforecast.sync.SyncUtils;
 import tw.edu.tku.csie.weatherforecast.utilities.UpdateCurrentLocation;
 import tw.edu.tku.csie.weatherforecast.utilities.PermissionUtils;
@@ -217,6 +219,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
 
+        Log.d("loader", "onCreateLoader");
 
         switch (loaderId) {
 
@@ -260,6 +263,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
         mForecastAdapter.swapCursor(data);
+        Log.d("loader", "swap1");
         if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
         mRecyclerView.smoothScrollToPosition(mPosition);
         if (data.getCount() != 0) showWeatherDataView();
@@ -289,11 +293,21 @@ public class MainActivity extends AppCompatActivity implements
      * @see WeatherAppContract.WeatherEntry#COLUMN_DATE_TIME
      */
     @Override
-    public void onClick(long date) {
+    public void onClick(View view, long date) {
         Intent weatherDetailIntent = new Intent(MainActivity.this, DetailActivity.class);
         Uri uriForDateClicked = WeatherAppContract.WeatherEntry.buildWeatherUriWithDate(date);
         weatherDetailIntent.setData(uriForDateClicked);
-        startActivity(weatherDetailIntent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    this,
+                    new Pair<>(view.findViewById(R.id.weather_icon), DetailActivity.VIEW_NAME_WEATHER_ICON),
+                    new Pair<>(view.findViewById(R.id.weather_description), DetailActivity.VIEW_NAME_WEATHER_DESCRIPTION),
+                    new Pair<>(view.findViewById(R.id.high_temperature), DetailActivity.VIEW_NAME_WEATHER_HIGH_TEMP),
+                    new Pair<>(view.findViewById(R.id.low_temperature), DetailActivity.VIEW_NAME_WEATHER_LOW_TEMP));
+            startActivity(weatherDetailIntent, activityOptionsCompat.toBundle());
+        } else {
+            startActivity(weatherDetailIntent);
+        }
     }
 
     /**

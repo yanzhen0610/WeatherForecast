@@ -52,7 +52,7 @@ class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ForecastAdapt
      * The interface that receives onClick messages.
      */
     public interface ForecastAdapterOnClickHandler {
-        void onClick(long date);
+        void onClick(View view, long dateTime);
     }
 
     /*
@@ -290,14 +290,14 @@ class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ForecastAdapt
          * selected, and then call the onClick handler registered with this adapter, passing that
          * date.
          *
-         * @param v the View that was clicked
+         * @param view the View that was clicked
          */
         @Override
-        public void onClick(View v) {
+        public void onClick(View view) {
             int adapterPosition = getAdapterPosition();
             mCursor.moveToPosition(adapterPosition);
-            long dateInMillis = mCursor.getLong(MainActivity.INDEX_WEATHER_DATE_TIME);
-            mClickHandler.onClick(dateInMillis);
+            long dateTimeInMillis = mCursor.getLong(MainActivity.INDEX_WEATHER_DATE_TIME);
+            mClickHandler.onClick(view, dateTimeInMillis);
         }
     }
 }
