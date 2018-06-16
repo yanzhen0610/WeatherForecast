@@ -4,7 +4,11 @@
 
 ## Pics
 
-![Main Activity](./assets/1528916785419.jpg)
+![Main Activity](./assets/1529141813759.jpg)
+
+![Main Activity Menu](./assets/1529141886816.jpg)
+
+![Main Activity Menu with zh interface](./assets/1529141939259.jpg)
 
 ![Detail Activity](./assets/1528917779305.jpg)
 
