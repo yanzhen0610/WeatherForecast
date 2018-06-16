@@ -39,7 +39,6 @@ import tw.edu.tku.csie.weatherforecast.sync.SyncIntentService;
 import tw.edu.tku.csie.weatherforecast.sync.SyncUtils;
 import tw.edu.tku.csie.weatherforecast.utilities.UpdateCurrentLocation;
 import tw.edu.tku.csie.weatherforecast.utilities.PermissionUtils;
-import tw.edu.tku.csie.weatherforecast.utilities.WeatherAppDateUtils;
 
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>,
@@ -160,8 +159,6 @@ public class MainActivity extends AppCompatActivity implements
         SyncUtils.initialize(this);
 
         updateLocation();
-
-        Log.d("date", String.valueOf(WeatherAppDateUtils.getNormalizedUtcDateForToday()));
     }
 
     private void updateLocation() {
