@@ -83,7 +83,7 @@ public class WeatherAppContract {
          * local time at midnight, as all we have to do is add a particular time zone's GMT
          * offset to this date to get local time at midnight on the appropriate date.
          */
-        public static final String COLUMN_DATE = "date";
+        public static final String COLUMN_DATE_TIME = "date_time";
 
         /* Weather ID as returned by API, used to identify the icon to be used */
         public static final String COLUMN_WEATHER_ID = "weather_id";
@@ -132,7 +132,7 @@ public class WeatherAppContract {
          */
         public static String getSqlSelectForTodayOnwards() {
             long normalizedUtcNow = WeatherAppDateUtils.normalizeDate(System.currentTimeMillis());
-            return WeatherAppContract.WeatherEntry.COLUMN_DATE + " >= " + normalizedUtcNow;
+            return WeatherAppContract.WeatherEntry.COLUMN_DATE_TIME + " >= " + normalizedUtcNow;
         }
     }
 }

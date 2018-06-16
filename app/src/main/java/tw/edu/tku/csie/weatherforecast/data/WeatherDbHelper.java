@@ -71,7 +71,7 @@ public class WeatherDbHelper extends SQLiteOpenHelper {
                  */
                 WeatherAppContract.WeatherEntry._ID               + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 
-                WeatherAppContract.WeatherEntry.COLUMN_DATE       + " INTEGER NOT NULL, "                 +
+                WeatherAppContract.WeatherEntry.COLUMN_DATE_TIME + " INTEGER NOT NULL, "                 +
 
                 WeatherAppContract.WeatherEntry.COLUMN_WEATHER_ID + " INTEGER NOT NULL,"                  +
 
@@ -90,7 +90,7 @@ public class WeatherDbHelper extends SQLiteOpenHelper {
                  * SQLite that if we have a weather entry for a certain date and we attempt to
                  * insert another weather entry with that date, we replace the old weather entry.
                  */
-                " UNIQUE (" + WeatherAppContract.WeatherEntry.COLUMN_DATE + ") ON CONFLICT REPLACE);";
+                " UNIQUE (" + WeatherAppContract.WeatherEntry.COLUMN_DATE_TIME + ") ON CONFLICT REPLACE);";
 
         /*
          * After we've spelled out our SQLite table creation statement above, we actually execute

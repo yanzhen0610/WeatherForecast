@@ -50,7 +50,7 @@ public class DetailActivity extends AppCompatActivity implements
      * weather display.
      */
     public static final String[] WEATHER_DETAIL_PROJECTION = {
-            WeatherAppContract.WeatherEntry.COLUMN_DATE,
+            WeatherAppContract.WeatherEntry.COLUMN_DATE_TIME,
             WeatherAppContract.WeatherEntry.COLUMN_MAX_TEMP,
             WeatherAppContract.WeatherEntry.COLUMN_MIN_TEMP,
             WeatherAppContract.WeatherEntry.COLUMN_HUMIDITY,
@@ -271,10 +271,10 @@ public class DetailActivity extends AppCompatActivity implements
          *
          * When displaying this date, one must add the GMT offset (in milliseconds) to acquire
          * the date representation for the local date in local time.
-         * WeatherAppDateUtils#getFriendlyDateString takes care of this for us.
+         * WeatherAppDateUtils#getFriendlyDateTimeString takes care of this for us.
          */
         long localDateMidnightGmt = data.getLong(INDEX_WEATHER_DATE);
-        String dateText = WeatherAppDateUtils.getFriendlyDateString(this, localDateMidnightGmt, true);
+        String dateText = WeatherAppDateUtils.getFriendlyDateTimeString(this, localDateMidnightGmt, true);
 
         mDetailBinding.primaryInfo.date.setText(dateText);
 

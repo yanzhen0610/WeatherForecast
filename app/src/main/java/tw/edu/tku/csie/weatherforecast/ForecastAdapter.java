@@ -162,9 +162,9 @@ class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ForecastAdapt
          * Weather Date *
          ****************/
          /* Read date from the cursor */
-        long dateInMillis = mCursor.getLong(MainActivity.INDEX_WEATHER_DATE);
+        long dateInMillis = mCursor.getLong(MainActivity.INDEX_WEATHER_DATE_TIME);
          /* Get human readable string using our utility method */
-        String dateString = WeatherAppDateUtils.getFriendlyDateString(mContext, dateInMillis, false);
+        String dateString = WeatherAppDateUtils.getFriendlyDateTimeString(mContext, dateInMillis, false);
 
          /* Display friendly date string */
         forecastAdapterViewHolder.dateView.setText(dateString);
@@ -296,7 +296,7 @@ class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ForecastAdapt
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
             mCursor.moveToPosition(adapterPosition);
-            long dateInMillis = mCursor.getLong(MainActivity.INDEX_WEATHER_DATE);
+            long dateInMillis = mCursor.getLong(MainActivity.INDEX_WEATHER_DATE_TIME);
             mClickHandler.onClick(dateInMillis);
         }
     }

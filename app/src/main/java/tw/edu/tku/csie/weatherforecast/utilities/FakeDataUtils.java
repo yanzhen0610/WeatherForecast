@@ -22,7 +22,7 @@ public class FakeDataUtils {
      */
     private static ContentValues createTestWeatherContentValues(long date) {
         ContentValues testWeatherValues = new ContentValues();
-        testWeatherValues.put(WeatherEntry.COLUMN_DATE, date);
+        testWeatherValues.put(WeatherEntry.COLUMN_DATE_TIME, date);
         testWeatherValues.put(WeatherEntry.COLUMN_DEGREES, Math.random()*2);
         testWeatherValues.put(WeatherEntry.COLUMN_HUMIDITY, Math.random()*100);
         testWeatherValues.put(WeatherEntry.COLUMN_PRESSURE, 870 + Math.random()*100);
