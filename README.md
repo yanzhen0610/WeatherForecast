@@ -10,7 +10,7 @@
 
 ![Main Activity Menu with zh interface](./assets/1529141939259.jpg)
 
-![Swipe to refersh](.\assets\ezgif-4-7eb82f3b58.gif)
+![Swipe to refersh](./assets/ezgif-4-7eb82f3b58.gif)
 
 ![Detail Activity](./assets/1528917779305.jpg)
 
