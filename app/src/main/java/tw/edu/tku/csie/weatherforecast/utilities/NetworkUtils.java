@@ -71,7 +71,8 @@ public final class NetworkUtils {
     /* The units we want our API to return */
     private static final String units = "metric";
     /* The number of days we want our API to return */
-    private static final int numDays = 14;
+//    private static final int numDays = 14;
+    private static final int cnt = 37;
 
     private static final String key = "f72d3dc1c74637f9afe84afb7d379adc";
 
@@ -86,7 +87,8 @@ public final class NetworkUtils {
     /* The units parameter allows us to designate whether we want metric units or imperial units */
     private static final String UNITS_PARAM = "units";
     /* The days parameter allows us to designate how many days of weather data we want */
-    private static final String DAYS_PARAM = "cnt";
+//    private static final String DAYS_PARAM = "cnt";
+    private static final String CNT_PARAM = "cnt";
 
     private static final String KEY_PARAM = "appid";
 
@@ -132,7 +134,7 @@ public final class NetworkUtils {
                 .appendQueryParameter(LON_PARAM, String.valueOf(longitude))
                 .appendQueryParameter(FORMAT_PARAM, format)
                 .appendQueryParameter(UNITS_PARAM, units)
-                .appendQueryParameter(DAYS_PARAM, Integer.toString(numDays))
+                .appendQueryParameter(CNT_PARAM, Integer.toString(cnt))
                 .build();
 
         try {
@@ -158,7 +160,7 @@ public final class NetworkUtils {
                 .appendQueryParameter(QUERY_PARAM, locationQuery)
                 .appendQueryParameter(FORMAT_PARAM, format)
                 .appendQueryParameter(UNITS_PARAM, units)
-                .appendQueryParameter(DAYS_PARAM, Integer.toString(numDays))
+                .appendQueryParameter(CNT_PARAM, Integer.toString(cnt))
                 .build();
 
         try {

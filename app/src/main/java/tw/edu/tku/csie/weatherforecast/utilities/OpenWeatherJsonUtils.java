@@ -31,6 +31,9 @@ import java.net.HttpURLConnection;
  */
 public final class OpenWeatherJsonUtils {
 
+    /* Date time information */
+    private static final String OWN_DATE_TIME = "dt";
+
     /* Location information */
 //    private static final String OWM_CITY = "city";
 //    private static final String OWM_COORD = "coord";
@@ -121,7 +124,7 @@ public final class OpenWeatherJsonUtils {
 //        long now = System.currentTimeMillis();
 //        long normalizedUtcStartDay = WeatherAppDateUtils.normalizeDate(now);
 
-        long normalizedUtcStartDay = WeatherAppDateUtils.getNormalizedUtcDateForToday();
+//        long normalizedUtcStartDay = WeatherAppDateUtils.getNormalizedUtcDateForToday();
 
         for (int i = 0; i < jsonWeatherArray.length(); i++) {
 
@@ -143,7 +146,8 @@ public final class OpenWeatherJsonUtils {
              * We ignore all the datetime values embedded in the JSON and assume that
              * the values are returned in-order by day (which is not guaranteed to be correct).
              */
-            dateTimeMillis = normalizedUtcStartDay + WeatherAppDateUtils.DAY_IN_MILLIS * i;
+//            dateTimeMillis = normalizedUtcStartDay + WeatherAppDateUtils.DAY_IN_MILLIS * i;
+            dateTimeMillis = dayForecast.getInt(OWN_DATE_TIME) * WeatherAppDateUtils.SEC_IN_MILLIS;
 
             JSONObject mainInfo = dayForecast.getJSONObject(OWN_MAIN_INFO);
             JSONObject windInfo = dayForecast.getJSONObject(OWN_WIND_INFO);
@@ -176,7 +180,7 @@ public final class OpenWeatherJsonUtils {
             low = mainInfo.getDouble(OWM_MIN);
 
             ContentValues weatherValues = new ContentValues();
-            weatherValues.put(WeatherAppContract.WeatherEntry.COLUMN_DATE, dateTimeMillis);
+            weatherValues.put(WeatherAppContract.WeatherEntry.COLUMN_DATE_TIME, dateTimeMillis);
             weatherValues.put(WeatherAppContract.WeatherEntry.COLUMN_HUMIDITY, humidity);
             weatherValues.put(WeatherAppContract.WeatherEntry.COLUMN_PRESSURE, pressure);
             weatherValues.put(WeatherAppContract.WeatherEntry.COLUMN_WIND_SPEED, windSpeed);

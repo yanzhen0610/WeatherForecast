@@ -28,6 +28,7 @@ public class NotificationUtils {
      */
     public static final String[] WEATHER_NOTIFICATION_PROJECTION = {
             WeatherAppContract.WeatherEntry.COLUMN_WEATHER_ID,
+            WeatherAppContract.WeatherEntry.COLUMN_DATE_TIME,
             WeatherAppContract.WeatherEntry.COLUMN_MAX_TEMP,
             WeatherAppContract.WeatherEntry.COLUMN_MIN_TEMP,
     };
@@ -38,8 +39,9 @@ public class NotificationUtils {
      * indices must be adjusted to match the order of the Strings.
      */
     public static final int INDEX_WEATHER_ID = 0;
-    public static final int INDEX_MAX_TEMP = 1;
-    public static final int INDEX_MIN_TEMP = 2;
+    public static final int INDEX_WEATHER_DATE_TIME = 1;
+    public static final int INDEX_MAX_TEMP = 2;
+    public static final int INDEX_MIN_TEMP = 3;
 
     /*
      * This notification ID can be used to access our notification after we've displayed it. This
@@ -75,22 +77,40 @@ public class NotificationUtils {
      */
     public static void notifyUserOfNewWeather(Context context) {
 
+        /* create notification before post notifications */
         createNotificationChannel(context);
 
+        /* URI for all rows of weather data in our weather table */
+        Uri forecastQueryUri = WeatherAppContract.WeatherEntry.CONTENT_URI;
+        /* Sort order: Ascending by date */
+        String sortOrder = WeatherAppContract.WeatherEntry.COLUMN_DATE_TIME + " ASC";
+        /*
+         * A SELECTION in SQL declares which rows you'd like to return. In our case, we
+         * want all weather data from today onwards that is stored in our weather table.
+         * We created a handy method to do that in our WeatherEntry class.
+         */
+        String selection = WeatherAppContract.WeatherEntry.getSqlSelectForTodayOnwards();
+
         /* Build the URI for today's weather in order to show up to date data in notification */
-        Uri todaysWeatherUri = WeatherAppContract.WeatherEntry
-                .buildWeatherUriWithDate(WeatherAppDateUtils.getNormalizedUtcDateForToday());
+//        Uri todaysWeatherUri = WeatherAppContract.WeatherEntry
+//                .buildWeatherUriWithDate(WeatherAppDateUtils.getNormalizedUtcDateForToday());
 
         /*
          * The MAIN_FORECAST_PROJECTION array passed in as the second parameter is defined in our WeatherAppContract
          * class and is used to limit the columns returned in our cursor.
          */
+//        Cursor todayWeatherCursor = context.getContentResolver().query(
+//                todaysWeatherUri,
+//                WEATHER_NOTIFICATION_PROJECTION,
+//                null,
+//                null,
+//                null);
         Cursor todayWeatherCursor = context.getContentResolver().query(
-                todaysWeatherUri,
+                forecastQueryUri,
                 WEATHER_NOTIFICATION_PROJECTION,
+                selection,
                 null,
-                null,
-                null);
+                sortOrder);
 
         /*
          * If todayWeatherCursor is empty, moveToFirst will return false. If our cursor is not
@@ -140,7 +160,9 @@ public class NotificationUtils {
              * we want to open Sunshine to the DetailActivity to display the newly updated weather.
              */
             Intent detailIntentForToday = new Intent(context, DetailActivity.class);
-            detailIntentForToday.setData(todaysWeatherUri);
+            long dateTime = todayWeatherCursor.getLong(INDEX_WEATHER_DATE_TIME);
+            Uri uriForDateTime = WeatherAppContract.WeatherEntry.buildWeatherUriWithDate(dateTime);
+            detailIntentForToday.setData(uriForDateTime);
 
             TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
             taskStackBuilder.addNextIntentWithParentStack(detailIntentForToday);

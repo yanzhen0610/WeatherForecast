@@ -24,8 +24,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
-import tw.edu.tku.csie.weatherforecast.utilities.WeatherAppDateUtils;
-
 /**
  * This class serves as the ContentProvider for all of Sunshine's data. This class allows us to
  * bulkInsert data, query data, and delete data.
@@ -149,11 +147,11 @@ public class WeatherProvider extends ContentProvider {
                 int rowsInserted = 0;
                 try {
                     for (ContentValues value : values) {
-                        long weatherDate =
-                                value.getAsLong(WeatherAppContract.WeatherEntry.COLUMN_DATE);
-                        if (!WeatherAppDateUtils.isDateNormalized(weatherDate)) {
-                            throw new IllegalArgumentException("Date must be normalized to insert");
-                        }
+//                        long weatherDate =
+//                                value.getAsLong(WeatherAppContract.WeatherEntry.COLUMN_DATE_TIME);
+//                        if (!WeatherAppDateUtils.isDateNormalized(weatherDate)) {
+//                            throw new IllegalArgumentException("Date must be normalized to insert");
+//                        }
 
                         long _id = db.insert(WeatherAppContract.WeatherEntry.TABLE_NAME, null, value);
                         if (_id != -1) {
@@ -252,7 +250,7 @@ public class WeatherProvider extends ContentProvider {
                          * within the selectionArguments array will be inserted into the
                          * selection statement by SQLite under the hood.
                          */
-                        WeatherAppContract.WeatherEntry.COLUMN_DATE + " = ? ",
+                        WeatherAppContract.WeatherEntry.COLUMN_DATE_TIME + " = ? ",
                         selectionArguments,
                         null,
                         null,

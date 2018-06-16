@@ -16,6 +16,7 @@
 package tw.edu.tku.csie.weatherforecast.utilities;
 
 import android.content.Context;
+import android.text.format.DateUtils;
 
 import tw.edu.tku.csie.weatherforecast.R;
 
@@ -31,6 +32,7 @@ public final class WeatherAppDateUtils {
 
     /* Milliseconds in a day */
     public static final long DAY_IN_MILLIS = TimeUnit.DAYS.toMillis(1);
+    public static final long SEC_IN_MILLIS = TimeUnit.SECONDS.toMillis(1);
 
     /**
      * This method returns the number of milliseconds (UTC time) for today's date at midnight in
@@ -168,21 +170,26 @@ public final class WeatherAppDateUtils {
     /**
      * This method will return the local time midnight for the provided normalized UTC date.
      *
-     * @param normalizedUtcDate UTC time at midnight for a given date. This number comes from the
+     * @param dateTimeInMillis UTC time at midnight for a given date. This number comes from the
      *                          database
      *
      * @return The local date corresponding to the given normalized UTC date
      */
-    private static long getLocalMidnightFromNormalizedUtcDate(long normalizedUtcDate) {
+    private static long getLocalDateTimeFromUtcDateTime(long dateTimeInMillis) {
         /* The timeZone object will provide us the current user's time zone offset */
-        TimeZone timeZone = TimeZone.getDefault();
+        TimeZone currentTimeZone = TimeZone.getDefault();
         /*
          * This offset, in milliseconds, when added to a UTC date time, will produce the local
          * time.
          */
-        long gmtOffset = timeZone.getOffset(normalizedUtcDate);
-        long localMidnightMillis = normalizedUtcDate - gmtOffset;
-        return localMidnightMillis;
+        long dstOffsetInMillis = 0;
+        if (currentTimeZone.inDaylightTime(new Date(dateTimeInMillis))) {
+            dstOffsetInMillis = currentTimeZone.getDSTSavings();
+        }
+//        long gmtOffset = currentTimeZone.getOffset(dateTime);
+//        long localMidnightMillis = dateTime - gmtOffset;
+//        return localMidnightMillis;
+        return dateTimeInMillis + dstOffsetInMillis;
     }
 
     /**
@@ -204,7 +211,9 @@ public final class WeatherAppDateUtils {
      * @return A user-friendly representation of the date such as "Today, June 8", "Tomorrow",
      * or "Friday"
      */
-    public static String getFriendlyDateString(Context context, long normalizedUtcMidnight, boolean showFullDate) {
+    public static String getFriendlyDateTimeString(Context context, long normalizedUtcMidnight, boolean showFullDate) {
+
+        String dateTimeString = null;
 
         /*
          * NOTE: localDate should be localDateMidnightMillis and should be straight from the
@@ -214,14 +223,14 @@ public final class WeatherAppDateUtils {
          * that normalized date and produce a date (in UTC time) that represents the local time
          * zone at midnight.
          */
-        long localDate = getLocalMidnightFromNormalizedUtcDate(normalizedUtcMidnight);
+        long localDateTime = getLocalDateTimeFromUtcDateTime(normalizedUtcMidnight);
 
         /*
          * In order to determine which day of the week we are creating a date string for, we need
          * to compare the number of days that have passed since the epoch (January 1, 1970 at
          * 00:00 GMT)
          */
-        long daysFromEpochToProvidedDate = elapsedDaysSinceEpoch(localDate);
+        long daysFromEpochToProvidedDate = elapsedDaysSinceEpoch(localDateTime);
 
         /*
          * As a basis for comparison, we use the number of days that have passed from the epoch
@@ -234,8 +243,8 @@ public final class WeatherAppDateUtils {
              * If the date we're building the String for is today's date, the format
              * is "Today, June 24"
              */
-            String dayName = getDayName(context, localDate);
-            String readableDate = getReadableDateString(context, localDate);
+            String dayName = getDayName(context, localDateTime);
+            String readableDate = getReadableDateString(context, localDateTime);
             if (daysFromEpochToProvidedDate - daysFromEpochToToday < 2) {
                 /*
                  * Since there is no localized format that returns "Today" or "Tomorrow" in the API
@@ -247,22 +256,26 @@ public final class WeatherAppDateUtils {
                  * documentation on DateFormat#getBestDateTimePattern(Locale, String)
                  * https://developer.android.com/reference/android/text/format/DateFormat.html#getBestDateTimePattern
                  */
-                String localizedDayName = new SimpleDateFormat("EEEE").format(localDate);
-                return readableDate.replace(localizedDayName, dayName);
+                String localizedDayName = new SimpleDateFormat("EEEE").format(localDateTime);
+                dateTimeString = readableDate.replace(localizedDayName, dayName);
             } else {
-                return readableDate;
+                dateTimeString = readableDate;
             }
         } else if (daysFromEpochToProvidedDate < daysFromEpochToToday + 7) {
             /* If the input date is less than a week in the future, just return the day name. */
-            return getDayName(context, localDate);
+            dateTimeString = getDayName(context, localDateTime);
         } else {
             int flags = android.text.format.DateUtils.FORMAT_SHOW_DATE
                     | android.text.format.DateUtils.FORMAT_NO_YEAR
                     | android.text.format.DateUtils.FORMAT_ABBREV_ALL
                     | android.text.format.DateUtils.FORMAT_SHOW_WEEKDAY;
 
-            return android.text.format.DateUtils.formatDateTime(context, localDate, flags);
+            dateTimeString = android.text.format.DateUtils.formatDateTime(context, localDateTime, flags);
         }
+
+        int flags = DateUtils.FORMAT_SHOW_TIME;
+
+        return String.format("%s %s", dateTimeString, DateUtils.formatDateTime(context, localDateTime, flags));
     }
 
     /**
