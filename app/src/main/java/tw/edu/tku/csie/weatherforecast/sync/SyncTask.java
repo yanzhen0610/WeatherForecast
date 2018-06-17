@@ -30,16 +30,7 @@ import java.net.URL;
 
 public class SyncTask {
 
-    /**
-     * Performs the network request for updated weather, parses the JSON from that request, and
-     * inserts the new weather information into our ContentProvider. Will notify the user that new
-     * weather has been loaded if the user hasn't been notified of the weather within the last day
-     * AND they haven't disabled notifications in the preferences screen.
-     *
-     * @param context Used to access utility methods and the ContentResolver
-     */
-    synchronized public static void syncWeather(Context context) {
-
+    synchronized public static void syncWeatherData(Context context) {
         try {
             /*
              * The getUrl method will return the URL that we need to get the forecast JSON for the
@@ -77,41 +68,52 @@ public class SyncTask {
                         WeatherAppContract.WeatherEntry.CONTENT_URI,
                         weatherValues);
 
-                /*
-                 * Finally, after we insert data into the ContentProvider, determine whether or not
-                 * we should notify the user that the weather has been refreshed.
-                 */
-                boolean notificationsEnabled = WeatherAppPreferences.areNotificationsEnabled(context);
-
-                /*
-                 * If the last notification was shown was more than 1 day ago, we want to send
-                 * another notification to the user that the weather has been updated. Remember,
-                 * it's important that you shouldn't spam your users with notifications.
-                 */
-                long timeSinceLastNotification = WeatherAppPreferences
-                        .getEllapsedTimeSinceLastNotification(context);
-
-                boolean oneDayPassedSinceLastNotification = false;
-
-                if (timeSinceLastNotification >= DateUtils.DAY_IN_MILLIS) {
-                    oneDayPassedSinceLastNotification = true;
-                }
-
-                /*
-                 * We only want to show the notification if the user wants them shown and we
-                 * haven't shown a notification in the past day.
-                 */
-                if (notificationsEnabled && oneDayPassedSinceLastNotification) {
-                    NotificationUtils.notifyUserOfNewWeather(context);
-                }
-
-            /* If the code reaches this point, we have successfully performed our sync */
-
             }
 
         } catch (Exception e) {
             /* Server probably invalid */
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Performs the network request for updated weather, parses the JSON from that request, and
+     * inserts the new weather information into our ContentProvider. Will notify the user that new
+     * weather has been loaded if the user hasn't been notified of the weather within the last day
+     * AND they haven't disabled notifications in the preferences screen.
+     *
+     * @param context Used to access utility methods and the ContentResolver
+     */
+    synchronized public static void syncWeather(Context context) {
+
+        syncWeatherData(context);
+
+        /*
+         * Finally, after we insert data into the ContentProvider, determine whether or not
+         * we should notify the user that the weather has been refreshed.
+         */
+        boolean notificationsEnabled = WeatherAppPreferences.areNotificationsEnabled(context);
+
+        /*
+         * If the last notification was shown was more than 1 day ago, we want to send
+         * another notification to the user that the weather has been updated. Remember,
+         * it's important that you shouldn't spam your users with notifications.
+         */
+        long timeSinceLastNotification = WeatherAppPreferences
+                .getEllapsedTimeSinceLastNotification(context);
+
+        boolean oneDayPassedSinceLastNotification = false;
+
+        if (timeSinceLastNotification >= DateUtils.DAY_IN_MILLIS) {
+            oneDayPassedSinceLastNotification = true;
+        }
+
+        /*
+         * We only want to show the notification if the user wants them shown and we
+         * haven't shown a notification in the past day.
+         */
+        if (notificationsEnabled && oneDayPassedSinceLastNotification) {
+            NotificationUtils.notifyUserOfNewWeather(context);
         }
     }
 }
