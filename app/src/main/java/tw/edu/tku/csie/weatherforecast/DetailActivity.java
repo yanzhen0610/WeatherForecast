@@ -45,6 +45,7 @@ public class DetailActivity extends AppCompatActivity implements
     /*
      * for transition
      */
+    public static final String VIEW_NAME_WEATHER_DATE_TIME = "detail:weather:date_time";
     public static final String VIEW_NAME_WEATHER_ICON = "detail:weather:icon";
     public static final String VIEW_NAME_WEATHER_DESCRIPTION = "detail:weather:description";
     public static final String VIEW_NAME_WEATHER_HIGH_TEMP = "detail:weather:high_temp";
@@ -128,6 +129,7 @@ public class DetailActivity extends AppCompatActivity implements
 
     private void setupTransition() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ViewCompat.setTransitionName(mDetailBinding.primaryInfo.date, VIEW_NAME_WEATHER_DATE_TIME);
             ViewCompat.setTransitionName(mDetailBinding.primaryInfo.weatherIcon, VIEW_NAME_WEATHER_ICON);
             ViewCompat.setTransitionName(mDetailBinding.primaryInfo.weatherDescription, VIEW_NAME_WEATHER_DESCRIPTION);
             ViewCompat.setTransitionName(mDetailBinding.primaryInfo.highTemperature, VIEW_NAME_WEATHER_HIGH_TEMP);

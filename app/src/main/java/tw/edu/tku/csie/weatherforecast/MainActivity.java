@@ -300,6 +300,7 @@ public class MainActivity extends AppCompatActivity implements
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
                     this,
+                    new Pair<>(view.findViewById(R.id.date), DetailActivity.VIEW_NAME_WEATHER_DATE_TIME),
                     new Pair<>(view.findViewById(R.id.weather_icon), DetailActivity.VIEW_NAME_WEATHER_ICON),
                     new Pair<>(view.findViewById(R.id.weather_description), DetailActivity.VIEW_NAME_WEATHER_DESCRIPTION),
                     new Pair<>(view.findViewById(R.id.high_temperature), DetailActivity.VIEW_NAME_WEATHER_HIGH_TEMP),
