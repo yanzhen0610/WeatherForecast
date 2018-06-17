@@ -169,10 +169,30 @@ public class MainActivity extends AppCompatActivity implements
          * the last created loader is re-used.
          */
         getSupportLoaderManager().initLoader(ID_FORECAST_LOADER, null, this);
+        loaderCallbackAfterOnCreate = true;
 
         SyncUtils.initialize(this);
 
         updateLocation();
+    }
+
+    private boolean loaderPreventCallbackAfterOnStart = false;
+    private boolean loaderCallbackAfterOnCreate = true;
+
+    @Override
+    protected void onStart() {
+        if (loaderCallbackAfterOnCreate) {
+            loaderCallbackAfterOnCreate = false;
+            loaderPreventCallbackAfterOnStart = false;
+        } else {
+            loaderPreventCallbackAfterOnStart = true;
+        }
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     private void updateLocation() {
@@ -224,8 +244,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public Loader<Cursor> onCreateLoader(int loaderId, Bundle bundle) {
 
-        Log.d("loader", "onCreateLoader");
-
         switch (loaderId) {
 
             case ID_FORECAST_LOADER:
@@ -265,14 +283,17 @@ public class MainActivity extends AppCompatActivity implements
      */
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
-        mForecastAdapter.swapCursor(data);
-        Log.d("loader", "swap1");
-        if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
+        if (loaderPreventCallbackAfterOnStart) {
+            loaderPreventCallbackAfterOnStart = false;
+        } else {
+            mForecastAdapter.swapCursor(data);
+            if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
 //        mRecyclerView.smoothScrollToPosition(mPosition);
-        mBinding.recyclerviewForecast.smoothScrollToPosition(mPosition);
-        if (data.getCount() != 0) showWeatherDataView();
+            mBinding.recyclerviewForecast.smoothScrollToPosition(mPosition);
+            if (data.getCount() != 0) showWeatherDataView();
 //        mSwipeRefreshLayout.setRefreshing(false);
-        mBinding.weatherForecastSwipeRefresh.setRefreshing(false);
+            mBinding.weatherForecastSwipeRefresh.setRefreshing(false);
+        }
     }
 
     /**
