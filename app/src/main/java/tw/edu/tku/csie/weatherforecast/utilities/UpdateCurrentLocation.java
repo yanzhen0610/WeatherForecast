@@ -15,13 +15,13 @@ public class UpdateCurrentLocation {
             try {
                 Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
                 if (lastKnownLocation != null) {
-                    Log.d("Location:", String.valueOf(lastKnownLocation.getLatitude()));
-                    Log.d("Location:", String.valueOf(lastKnownLocation.getLongitude()));
+                    Log.v("Location:", String.valueOf(lastKnownLocation.getLatitude()));
+                    Log.v("Location:", String.valueOf(lastKnownLocation.getLongitude()));
                     WeatherAppPreferences.setLocationDetails(context,
                             lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
                     return true;
                 } else {
-                    Log.d("Location:", "lastKnownLocation = null");
+                    Log.v("Location:", "lastKnownLocation = null");
                 }
             } catch (SecurityException e) {
                 e.printStackTrace();
