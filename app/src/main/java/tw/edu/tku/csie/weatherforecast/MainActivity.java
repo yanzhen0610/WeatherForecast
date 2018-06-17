@@ -17,6 +17,7 @@ package tw.edu.tku.csie.weatherforecast;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,7 +27,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.util.Pair;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,10 +35,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
 
 import tw.edu.tku.csie.weatherforecast.data.WeatherAppContract;
 import tw.edu.tku.csie.weatherforecast.data.WeatherAppPreferences;
+import tw.edu.tku.csie.weatherforecast.databinding.ActivityForecastBinding;
 import tw.edu.tku.csie.weatherforecast.sync.SyncUtils;
 import tw.edu.tku.csie.weatherforecast.utilities.UpdateCurrentLocation;
 import tw.edu.tku.csie.weatherforecast.utilities.PermissionUtils;
@@ -80,28 +80,29 @@ public class MainActivity extends AppCompatActivity implements
      */
     private static final int ID_FORECAST_LOADER = 44;
 
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+//    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private ForecastAdapter mForecastAdapter;
-    private RecyclerView mRecyclerView;
+//    private RecyclerView mRecyclerView;
     private int mPosition = RecyclerView.NO_POSITION;
 
-    private ProgressBar mLoadingIndicator;
+//    private ProgressBar mLoadingIndicator;
 
+    private ActivityForecastBinding mBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_forecast);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_forecast);
         getSupportActionBar().setElevation(0f);
 
-        mSwipeRefreshLayout = findViewById(R.id.weather_forecast_swipe_refresh);
+//        mSwipeRefreshLayout = findViewById(R.id.weather_forecast_swipe_refresh);
 
         /*
          * Using findViewById, we get a reference to our RecyclerView from xml. This allows us to
          * do things like set the adapter of the RecyclerView and toggle the visibility.
          */
-        mRecyclerView = findViewById(R.id.recyclerview_forecast);
+//        mRecyclerView = findViewById(R.id.recyclerview_forecast);
 
         /*
          * The ProgressBar that will indicate to the user that we are loading data. It will be
@@ -110,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements
          * Please note: This so called "ProgressBar" isn't a bar by default. It is more of a
          * circle. We didn't make the rules (or the names of Views), we just follow them.
          */
-        mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
+//        mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
 
         /*
          * A LinearLayoutManager is responsible for measuring and positioning item views within a
@@ -130,13 +131,15 @@ public class MainActivity extends AppCompatActivity implements
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 
         /* setLayoutManager associates the LayoutManager we created above with our RecyclerView */
-        mRecyclerView.setLayoutManager(layoutManager);
+//        mRecyclerView.setLayoutManager(layoutManager);
+        mBinding.recyclerviewForecast.setLayoutManager(layoutManager);
 
         /*
          * Use this setting to improve performance if you know that changes in content do not
          * change the child layout size in the RecyclerView
          */
-        mRecyclerView.setHasFixedSize(true);
+//        mRecyclerView.setHasFixedSize(true);
+        mBinding.recyclerviewForecast.setHasFixedSize(true);
 
         /*
          * The ForecastAdapter is responsible for linking our weather data with the Views that
@@ -151,9 +154,11 @@ public class MainActivity extends AppCompatActivity implements
         mForecastAdapter = new ForecastAdapter(this, this);
 
         /* Setting the adapter attaches it to the RecyclerView in our layout. */
-        mRecyclerView.setAdapter(mForecastAdapter);
+//        mRecyclerView.setAdapter(mForecastAdapter);
+        mBinding.recyclerviewForecast.setAdapter(mForecastAdapter);
 
-        mSwipeRefreshLayout.setOnRefreshListener(this::refresh);
+//        mSwipeRefreshLayout.setOnRefreshListener(this::refresh);
+        mBinding.weatherForecastSwipeRefresh.setOnRefreshListener(this::refresh);
 
 
         showLoading();
@@ -260,14 +265,14 @@ public class MainActivity extends AppCompatActivity implements
      */
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
-
-
         mForecastAdapter.swapCursor(data);
         Log.d("loader", "swap1");
         if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
-        mRecyclerView.smoothScrollToPosition(mPosition);
+//        mRecyclerView.smoothScrollToPosition(mPosition);
+        mBinding.recyclerviewForecast.smoothScrollToPosition(mPosition);
         if (data.getCount() != 0) showWeatherDataView();
-        mSwipeRefreshLayout.setRefreshing(false);
+//        mSwipeRefreshLayout.setRefreshing(false);
+        mBinding.weatherForecastSwipeRefresh.setRefreshing(false);
     }
 
     /**
@@ -283,7 +288,6 @@ public class MainActivity extends AppCompatActivity implements
          * displaying the data.
          */
         mForecastAdapter.swapCursor(null);
-        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     /**
@@ -297,14 +301,16 @@ public class MainActivity extends AppCompatActivity implements
         Intent weatherDetailIntent = new Intent(MainActivity.this, DetailActivity.class);
         Uri uriForDateClicked = WeatherAppContract.WeatherEntry.buildWeatherUriWithDate(date);
         weatherDetailIntent.setData(uriForDateClicked);
+
+        /* add transition animation */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
                     this,
-                    new Pair<>(view.findViewById(R.id.date), DetailActivity.VIEW_NAME_WEATHER_DATE_TIME),
-                    new Pair<>(view.findViewById(R.id.weather_icon), DetailActivity.VIEW_NAME_WEATHER_ICON),
-                    new Pair<>(view.findViewById(R.id.weather_description), DetailActivity.VIEW_NAME_WEATHER_DESCRIPTION),
-                    new Pair<>(view.findViewById(R.id.high_temperature), DetailActivity.VIEW_NAME_WEATHER_HIGH_TEMP),
-                    new Pair<>(view.findViewById(R.id.low_temperature), DetailActivity.VIEW_NAME_WEATHER_LOW_TEMP));
+                    Pair.create(view.findViewById(R.id.date), DetailActivity.VIEW_NAME_WEATHER_DATE_TIME),
+                    Pair.create(view.findViewById(R.id.weather_icon), DetailActivity.VIEW_NAME_WEATHER_ICON),
+                    Pair.create(view.findViewById(R.id.weather_description), DetailActivity.VIEW_NAME_WEATHER_DESCRIPTION),
+                    Pair.create(view.findViewById(R.id.high_temperature), DetailActivity.VIEW_NAME_WEATHER_HIGH_TEMP),
+                    Pair.create(view.findViewById(R.id.low_temperature), DetailActivity.VIEW_NAME_WEATHER_LOW_TEMP));
             startActivity(weatherDetailIntent, activityOptionsCompat.toBundle());
         } else {
             startActivity(weatherDetailIntent);
@@ -320,9 +326,11 @@ public class MainActivity extends AppCompatActivity implements
      */
     private void showWeatherDataView() {
         /* First, hide the loading indicator */
-        mLoadingIndicator.setVisibility(View.INVISIBLE);
+//        mLoadingIndicator.setVisibility(View.INVISIBLE);
+        mBinding.pbLoadingIndicator.setVisibility(View.INVISIBLE);
         /* Finally, make sure the weather data is visible */
-        mRecyclerView.setVisibility(View.VISIBLE);
+//        mRecyclerView.setVisibility(View.VISIBLE);
+        mBinding.recyclerviewForecast.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -334,9 +342,11 @@ public class MainActivity extends AppCompatActivity implements
      */
     private void showLoading() {
         /* Then, hide the weather data */
-        mRecyclerView.setVisibility(View.INVISIBLE);
+//        mRecyclerView.setVisibility(View.INVISIBLE);
+        mBinding.recyclerviewForecast.setVisibility(View.INVISIBLE);
         /* Finally, show the loading indicator */
-        mLoadingIndicator.setVisibility(View.VISIBLE);
+//        mLoadingIndicator.setVisibility(View.VISIBLE);
+        mBinding.pbLoadingIndicator.setVisibility(View.VISIBLE);
     }
 
     /**
