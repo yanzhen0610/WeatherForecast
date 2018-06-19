@@ -28,7 +28,6 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.transition.Slide;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -133,7 +132,6 @@ public class DetailActivity extends AppCompatActivity implements
             ViewCompat.setTransitionName(mDetailBinding.primaryInfo.weatherDescription, VIEW_NAME_WEATHER_DESCRIPTION);
             ViewCompat.setTransitionName(mDetailBinding.primaryInfo.highTemperature, VIEW_NAME_WEATHER_HIGH_TEMP);
             ViewCompat.setTransitionName(mDetailBinding.primaryInfo.lowTemperature, VIEW_NAME_WEATHER_LOW_TEMP);
-            getWindow().setExitTransition(new Slide());
         }
     }
 
