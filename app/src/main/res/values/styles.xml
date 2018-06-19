@@ -26,17 +26,21 @@
     </style>
 
     <!-- forecast activity action bar styles -->
-    <style name="ActionBar.Solid.Sunshine.NoTitle" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+    <style name="ActionBar.Solid.WeatherForecast.NoTitle" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="displayOptions">useLogo|showHome</item>
         <item name="logo">@drawable/ic_logo</item>
     </style>
 
-    <style name="ActionBar.Solid.Sunshine.Title" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+    <style name="ActionBar.Solid.WeatherForecast.Title" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="displayOptions">showTitle</item>
     </style>
 
     <style name="AppTheme.Forecast" parent="@style/AppTheme">
-        <item name="actionBarStyle">@style/ActionBar.Solid.Sunshine.Title</item>
+        <item name="actionBarStyle">@style/ActionBar.Solid.WeatherForecast.Title</item>
+    </style>
+
+    <style name="AppTheme.Detail" parent="@style/AppTheme">
+        <item name="actionBarStyle">@style/ActionBar.Solid.WeatherForecast.Title</item>
     </style>
 
     <!-- Style used in the DetailActivity for the labels of the extra weather information -->
