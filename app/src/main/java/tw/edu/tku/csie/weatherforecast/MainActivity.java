@@ -190,11 +190,6 @@ public class MainActivity extends AppCompatActivity implements
         super.onStart();
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
     private void updateLocation() {
         if (WeatherAppPreferences.isUseCurrentLocation(this)) {
             if (PermissionUtils.checkAccessFineLocationPermission(this)) {
