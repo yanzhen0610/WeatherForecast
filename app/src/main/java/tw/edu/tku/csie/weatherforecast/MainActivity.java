@@ -35,11 +35,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import tw.edu.tku.csie.weatherforecast.data.WeatherAppContract;
 import tw.edu.tku.csie.weatherforecast.data.WeatherAppPreferences;
 import tw.edu.tku.csie.weatherforecast.databinding.ActivityForecastBinding;
 import tw.edu.tku.csie.weatherforecast.sync.SyncUtils;
+import tw.edu.tku.csie.weatherforecast.transition.TransitionUtils;
 import tw.edu.tku.csie.weatherforecast.utilities.UpdateCurrentLocation;
 import tw.edu.tku.csie.weatherforecast.utilities.PermissionUtils;
 
@@ -320,17 +322,40 @@ public class MainActivity extends AppCompatActivity implements
 
         /* add transition animation */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    this,
-                    Pair.create(view.findViewById(R.id.date), DetailActivity.VIEW_NAME_WEATHER_DATE_TIME),
-                    Pair.create(view.findViewById(R.id.weather_icon), DetailActivity.VIEW_NAME_WEATHER_ICON),
-                    Pair.create(view.findViewById(R.id.weather_description), DetailActivity.VIEW_NAME_WEATHER_DESCRIPTION),
-                    Pair.create(view.findViewById(R.id.high_temperature), DetailActivity.VIEW_NAME_WEATHER_HIGH_TEMP),
-                    Pair.create(view.findViewById(R.id.low_temperature), DetailActivity.VIEW_NAME_WEATHER_LOW_TEMP));
+            setDetailActivityTransitionData(weatherDetailIntent, view);
+            ActivityOptionsCompat activityOptionsCompat = getStartDetailActivityOptions(view);
             startActivity(weatherDetailIntent, activityOptionsCompat.toBundle());
         } else {
             startActivity(weatherDetailIntent);
         }
+    }
+
+//    private void setSomething(Intent intent)
+
+    private void setDetailActivityTransitionData(Intent intent, View view) {
+        intent.setAction(Intent.ACTION_VIEW);
+
+        final TextView dateTime = view.findViewById(R.id.date);
+        TransitionUtils.addTextViewInfo(intent, getString(R.string.transition_name_date), dateTime);
+
+        final TextView description = view.findViewById(R.id.weather_description);
+        TransitionUtils.addTextViewInfo(intent, getString(R.string.transition_name_description), description);
+
+        final TextView highTemp = view.findViewById(R.id.high_temperature);
+        TransitionUtils.addTextViewInfo(intent, getString(R.string.transition_name_high_temp), highTemp);
+
+        final TextView lowTemp = view.findViewById(R.id.low_temperature);
+        TransitionUtils.addTextViewInfo(intent, getString(R.string.transition_name_low_temp), lowTemp);
+    }
+
+    private ActivityOptionsCompat getStartDetailActivityOptions(View view) {
+        return ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this,
+                Pair.create(view.findViewById(R.id.date), getString(R.string.transition_name_date)),
+                Pair.create(view.findViewById(R.id.weather_icon), getString(R.string.transition_name_weather_icon)),
+                Pair.create(view.findViewById(R.id.weather_description), getString(R.string.transition_name_description)),
+                Pair.create(view.findViewById(R.id.high_temperature), getString(R.string.transition_name_high_temp)),
+                Pair.create(view.findViewById(R.id.low_temperature), getString(R.string.transition_name_low_temp)));
     }
 
     /**

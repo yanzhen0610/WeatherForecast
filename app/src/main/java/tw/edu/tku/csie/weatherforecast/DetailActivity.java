@@ -28,26 +28,24 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.transition.Fade;
+import android.transition.Slide;
+import android.transition.TransitionSet;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.animation.AnimationUtils;
 
 import tw.edu.tku.csie.weatherforecast.data.WeatherAppContract;
 import tw.edu.tku.csie.weatherforecast.databinding.ActivityDetailBinding;
+import tw.edu.tku.csie.weatherforecast.ui.DetailSharedElementEnterCallback;
 import tw.edu.tku.csie.weatherforecast.utilities.WeatherAppDateUtils;
 import tw.edu.tku.csie.weatherforecast.utilities.WeatherUtils;
 
 public class DetailActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
-    /*
-     * for transition
-     */
-    public static final String VIEW_NAME_WEATHER_DATE_TIME = "detail:weather:date_time";
-    public static final String VIEW_NAME_WEATHER_ICON = "detail:weather:icon";
-    public static final String VIEW_NAME_WEATHER_DESCRIPTION = "detail:weather:description";
-    public static final String VIEW_NAME_WEATHER_HIGH_TEMP = "detail:weather:high_temp";
-    public static final String VIEW_NAME_WEATHER_LOW_TEMP = "detail:weather:low_temp";
 
     /*
      * In this Activity, you can share the selected day's forecast. No social sharing is complete
@@ -99,6 +97,7 @@ public class DetailActivity extends AppCompatActivity implements
     /* The URI that is used to access the chosen day's weather details */
     private Uri mUri;
 
+    private DetailSharedElementEnterCallback sharedElementCallback;
 
     /*
      * This field is used for data binding. Normally, we would have to call findViewById many
@@ -127,11 +126,10 @@ public class DetailActivity extends AppCompatActivity implements
 
     private void setupTransition() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ViewCompat.setTransitionName(mDetailBinding.primaryInfo.date, VIEW_NAME_WEATHER_DATE_TIME);
-            ViewCompat.setTransitionName(mDetailBinding.primaryInfo.weatherIcon, VIEW_NAME_WEATHER_ICON);
-            ViewCompat.setTransitionName(mDetailBinding.primaryInfo.weatherDescription, VIEW_NAME_WEATHER_DESCRIPTION);
-            ViewCompat.setTransitionName(mDetailBinding.primaryInfo.highTemperature, VIEW_NAME_WEATHER_HIGH_TEMP);
-            ViewCompat.setTransitionName(mDetailBinding.primaryInfo.lowTemperature, VIEW_NAME_WEATHER_LOW_TEMP);
+            Intent intent = getIntent();
+            sharedElementCallback = new DetailSharedElementEnterCallback(intent, this);
+            sharedElementCallback.setDetailBinding(mDetailBinding);
+            setEnterSharedElementCallback(sharedElementCallback);
         }
     }
 

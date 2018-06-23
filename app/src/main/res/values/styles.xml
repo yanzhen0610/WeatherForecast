@@ -14,7 +14,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
@@ -36,11 +36,20 @@
     </style>
 
     <style name="AppTheme.Forecast" parent="@style/AppTheme">
+        <!-- enable window content transitions -->
+        <item name="android:windowActivityTransitions" tools:targetApi="lollipop">true</item>
+
         <item name="actionBarStyle">@style/ActionBar.Solid.WeatherForecast.Title</item>
     </style>
 
     <style name="AppTheme.Detail" parent="@style/AppTheme">
+        <!-- enable window content transitions -->
+        <item name="android:windowActivityTransitions" tools:targetApi="lollipop">true</item>
+
         <item name="actionBarStyle">@style/ActionBar.Solid.WeatherForecast.Title</item>
+        <item name="android:windowSharedElementEnterTransition" tools:targetApi="lollipop">
+            @transition/shared_main_detail
+        </item>
     </style>
 
     <!-- Style used in the DetailActivity for the labels of the extra weather information -->

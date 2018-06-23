@@ -258,4 +258,11 @@
     <string name="notification_weather_forecast_channel_name">Weather Forecast</string>
     <string name="notification_weather_forecast_channel_description">Send weather forecast daily</string>
 
+    <!-- Used by Transition -->
+    <string name="transition_name_weather_icon" translatable="false">transition_name_weather_icon</string>
+    <string name="transition_name_high_temp" translatable="false">transition_name_high_temp</string>
+    <string name="transition_name_low_temp" translatable="false">transition_name_low_temp</string>
+    <string name="transition_name_description" translatable="false">transition_name_description</string>
+    <string name="transition_name_date" translatable="false">transition_name_date</string>
+
 </resources>
