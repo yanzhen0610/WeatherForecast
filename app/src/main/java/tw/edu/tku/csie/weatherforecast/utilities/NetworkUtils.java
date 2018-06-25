@@ -48,11 +48,11 @@ public final class NetworkUtils {
      * If you'd prefer to test with the weather data that you will see in the videos on Udacity,
      * you can do so by setting the FORECAST_BASE_URL to STATIC_WEATHER_URL below.
      */
-    private static final String DYNAMIC_WEATHER_URL =
-            "https://andfun-weather.udacity.com/weather";
+//    private static final String DYNAMIC_WEATHER_URL =
+//            "https://andfun-weather.udacity.com/weather";
 
-    private static final String STATIC_WEATHER_URL =
-            "https://andfun-weather.udacity.com/staticweather";
+//    private static final String STATIC_WEATHER_URL =
+//            "https://andfun-weather.udacity.com/staticweather";
 
     private static final String OPEN_WEATHER_API_5_DAYS_FORECAST =
             "http://api.openweathermap.org/data/2.5/forecast";
@@ -71,7 +71,6 @@ public final class NetworkUtils {
     /* The units we want our API to return */
     private static final String units = "metric";
     /* The number of days we want our API to return */
-//    private static final int numDays = 14;
     private static final int cnt = 37;
 
     private static final String key = "f72d3dc1c74637f9afe84afb7d379adc";
@@ -87,7 +86,6 @@ public final class NetworkUtils {
     /* The units parameter allows us to designate whether we want metric units or imperial units */
     private static final String UNITS_PARAM = "units";
     /* The days parameter allows us to designate how many days of weather data we want */
-//    private static final String DAYS_PARAM = "cnt";
     private static final String CNT_PARAM = "cnt";
 
     private static final String KEY_PARAM = "appid";

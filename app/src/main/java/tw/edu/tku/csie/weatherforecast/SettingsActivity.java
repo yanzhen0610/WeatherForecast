@@ -20,6 +20,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
@@ -45,7 +46,10 @@ public class SettingsActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
@@ -79,23 +83,10 @@ public class SettingsActivity extends AppCompatActivity implements
                 granted = grantResults[i] == PackageManager.PERMISSION_GRANTED;
             }
         }
+
         if (granted) {
-//            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-//            if (locationManager != null) {
-//                try {
-//                    Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
-//                    if (lastKnownLocation != null) {
-//                        WeatherAppPreferences.setLocationDetails(this,
-//                                lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
-//                        return;
-//                    }
-//                } catch (SecurityException e) {
-//                    e.printStackTrace();
-//                }
-//            }
             if (UpdateCurrentLocation.updateCurrentLocation(this)) {
                 UpdateCityNameByLatitudeAndLongitude.startUpdate(this);
-//                startService(new Intent(this, UpdateCityNameByLatitudeAndLongitude.class));
                 return;
             }
         }

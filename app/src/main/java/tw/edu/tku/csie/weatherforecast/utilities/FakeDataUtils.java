@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 import static tw.edu.tku.csie.weatherforecast.data.WeatherAppContract.WeatherEntry;
 
+@SuppressWarnings("unused")
 public class FakeDataUtils {
 
     private static int [] weatherIDs = {200,300,500,711,900,962};
@@ -36,12 +37,12 @@ public class FakeDataUtils {
 
     /**
      * Creates random weather data for 7 days starting today
-     * @param context
+     * @param context context
      */
     public static void insertFakeData(Context context) {
         //Get today's normalized date
         long today = WeatherAppDateUtils.getNormalizedUtcDateForToday();
-        List<ContentValues> fakeValues = new ArrayList<ContentValues>();
+        List<ContentValues> fakeValues = new ArrayList<>();
         //loop over 7 days starting today onwards
         for(int i=0; i<7; i++) {
             fakeValues.add(FakeDataUtils.createTestWeatherContentValues(today + TimeUnit.DAYS.toMillis(i)));

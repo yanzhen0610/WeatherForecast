@@ -38,8 +38,7 @@ public final class WeatherUtils {
      * @return Temperature in degrees Fahrenheit (°F)
      */
     private static double celsiusToFahrenheit(double temperatureInCelsius) {
-        double temperatureInFahrenheit = (temperatureInCelsius * 1.8) + 32;
-        return temperatureInFahrenheit;
+        return (temperatureInCelsius * 1.8) + 32;
     }
 
     /**
@@ -63,27 +62,6 @@ public final class WeatherUtils {
 
         /* For presentation, assume the user doesn't care about tenths of a degree. */
         return String.format(context.getString(temperatureFormatResourceId), temperature);
-    }
-
-    /**
-     * This method will format the temperatures to be displayed in the
-     * following form: "HIGH° / LOW°"
-     *
-     * @param context Android Context to access preferences and resources
-     * @param high    High temperature for a day in user's preferred units
-     * @param low     Low temperature for a day in user's preferred units
-     *
-     * @return String in the form: "HIGH° / LOW°"
-     */
-    public static String formatHighLows(Context context, double high, double low) {
-        long roundedHigh = Math.round(high);
-        long roundedLow = Math.round(low);
-
-        String formattedHigh = formatTemperature(context, roundedHigh);
-        String formattedLow = formatTemperature(context, roundedLow);
-
-        String highLowStr = formattedHigh + " / " + formattedLow;
-        return highLowStr;
     }
 
     /**
@@ -342,7 +320,7 @@ public final class WeatherUtils {
             return R.drawable.ic_rain;
         } else if (weatherId >= 600 && weatherId <= 622) {
             return R.drawable.ic_snow;
-        } else if (weatherId >= 701 && weatherId <= 761) {
+        } else if (weatherId >= 701 && weatherId <= 751) {
             return R.drawable.ic_fog;
         } else if (weatherId == 761 || weatherId == 771 || weatherId == 781) {
             return R.drawable.ic_storm;
@@ -395,7 +373,7 @@ public final class WeatherUtils {
             return R.drawable.art_rain;
         } else if (weatherId >= 600 && weatherId <= 622) {
             return R.drawable.art_snow;
-        } else if (weatherId >= 701 && weatherId <= 761) {
+        } else if (weatherId >= 701 && weatherId <= 751) {
             return R.drawable.art_fog;
         } else if (weatherId == 761 || weatherId == 771 || weatherId == 781) {
             return R.drawable.art_storm;

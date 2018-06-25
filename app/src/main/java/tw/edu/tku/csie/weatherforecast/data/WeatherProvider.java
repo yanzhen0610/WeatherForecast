@@ -147,12 +147,6 @@ public class WeatherProvider extends ContentProvider {
                 int rowsInserted = 0;
                 try {
                     for (ContentValues value : values) {
-//                        long weatherDate =
-//                                value.getAsLong(WeatherAppContract.WeatherEntry.COLUMN_DATE_TIME);
-//                        if (!WeatherAppDateUtils.isDateNormalized(weatherDate)) {
-//                            throw new IllegalArgumentException("Date must be normalized to insert");
-//                        }
-
                         long _id = db.insert(WeatherAppContract.WeatherEntry.TABLE_NAME, null, value);
                         if (_id != -1) {
                             rowsInserted++;

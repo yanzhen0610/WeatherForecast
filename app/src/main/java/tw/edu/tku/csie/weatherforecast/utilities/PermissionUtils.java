@@ -17,11 +17,11 @@ public class PermissionUtils {
                 PackageManager.PERMISSION_GRANTED;
     }
 
-    public static void requestAccessFineLocationPermission(Context context) {
-        if (!checkAccessFineLocationPermission(context)) {
+    public static void requestAccessFineLocationPermission(Activity activity) {
+        if (!checkAccessFineLocationPermission(activity)) {
             Log.v(TAG, "Request permission: ACCESS_FINE_LOCATION");
             ActivityCompat.requestPermissions(
-                    (Activity) context,
+                    activity,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     0);
         }

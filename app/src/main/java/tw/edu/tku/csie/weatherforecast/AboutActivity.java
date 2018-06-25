@@ -4,12 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.webkit.WebView;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 public class AboutActivity extends AppCompatActivity {
 
@@ -26,7 +22,7 @@ public class AboutActivity extends AppCompatActivity {
             actionBar.setTitle(getResources().getString(R.string.action_about));
         }
 
-        mWebView = (WebView) findViewById(R.id.wv_about);
+        mWebView = findViewById(R.id.wv_about);
         mWebView.loadUrl("file:///android_asset/about.html");
 
     }

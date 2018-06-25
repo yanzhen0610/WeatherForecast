@@ -91,20 +91,10 @@ public class NotificationUtils {
          */
         String selection = WeatherAppContract.WeatherEntry.getSqlSelectForTodayOnwards();
 
-        /* Build the URI for today's weather in order to show up to date data in notification */
-//        Uri todaysWeatherUri = WeatherAppContract.WeatherEntry
-//                .buildWeatherUriWithDate(WeatherAppDateUtils.getNormalizedUtcDateForToday());
-
         /*
          * The MAIN_FORECAST_PROJECTION array passed in as the second parameter is defined in our WeatherAppContract
          * class and is used to limit the columns returned in our cursor.
          */
-//        Cursor todayWeatherCursor = context.getContentResolver().query(
-//                todaysWeatherUri,
-//                WEATHER_NOTIFICATION_PROJECTION,
-//                null,
-//                null,
-//                null);
         Cursor todayWeatherCursor = context.getContentResolver().query(
                 forecastQueryUri,
                 WEATHER_NOTIFICATION_PROJECTION,
@@ -175,7 +165,6 @@ public class NotificationUtils {
                     context.getSystemService(Context.NOTIFICATION_SERVICE);
 
             /* WEATHER_NOTIFICATION_ID allows you to update or cancel the notification later on */
-//            notificationManager.notify(WEATHER_NOTIFICATION_ID, notificationBuilder.build());
             if (notificationManager != null) {
                 notificationManager.notify(WEATHER_NOTIFICATION_ID, notificationBuilder.build());
             }
@@ -219,12 +208,6 @@ public class NotificationUtils {
         String notificationFormat = context.getString(R.string.format_notification);
 
         /* Using String's format method, we create the forecast summary */
-//        String notificationText = String.format(notificationFormat,
-//                shortDescription,
-//                WeatherUtils.formatTemperature(context, high),
-//                WeatherUtils.formatTemperature(context, low));
-//
-//        return notificationText;
         return String.format(notificationFormat,
                 shortDescription,
                 WeatherUtils.formatTemperature(context, high),
