@@ -141,56 +141,63 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
         if (key.equals(getString(R.string.pref_user_input_location_key))) {
-            // we've changed the location
-            // Wipe out any potential PlacePicker latlng values so that we can use this text entry.
-//            WeatherAppPreferences.resetLocationCoordinates(mSettingActivity);
-//            SyncUtils.startImmediateSync(mSettingActivity);
+            // if user enter a new location
+
+            // temporary set the Eng and locale to the user's input
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString(getString(R.string.pref_en_location_key),
                     sharedPreferences.getString(key, getString(R.string.pref_location_default)));
             editor.putString(getString(R.string.pref_locale_location_key),
                     sharedPreferences.getString(key, getString(R.string.pref_location_default)));
             editor.apply();
+
+            // get the English and user's locale name of the location
             UpdateLocalizedAndEnglishCityName.startUpdate(mSettingActivity);
         } else if (key.equals(getString(R.string.pref_locale_location_key))) {
+            // if the locale name was updated, then update the summary
             updateEditTextLocationTextAndSummary();
         } else if (key.equals(getString(R.string.pref_units_key))) {
             // units have changed. update lists of weather entries accordingly
             mSettingActivity.getContentResolver().notifyChange(WeatherAppContract.WeatherEntry.CONTENT_URI, null);
+            setSummaryByStringValue(sharedPreferences, key);
         } else if (key.equals(getString(R.string.pref_use_current_location_key))) {
 
             boolean value = sharedPreferences.getBoolean(key,
                     getResources().getBoolean(R.bool.pref_use_current_location_by_default));
 
             if (value) {
+                // check permission
                 if (PermissionUtils.checkAccessFineLocationPermission(mSettingActivity)) {
+                    // if permission granted
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.remove(getString(R.string.pref_current_city_key));
+                    editor.apply();
                     UpdateCurrentLocation.updateCurrentLocation(mSettingActivity);
-                    SyncUtils.startImmediateSync(mSettingActivity);
-//                    mSettingActivity.startService(new Intent(mSettingActivity, UpdateCityNameByLatitudeAndLongitude.class));
                     UpdateCityNameByLatitudeAndLongitude.startUpdate(mSettingActivity);
                 } else {
+                    // request permission
                     PermissionUtils.requestAccessFineLocationPermission(mSettingActivity);
                 }
             } else {
+                // update weather data
                 SyncUtils.startImmediateSync(mSettingActivity);
             }
 
+            // if decided to use current location, then make the EditText unavailable
             mEditTextLocationPreference.setEnabled(!value);
+            // if the permission request was denied, then uncheck the checkbox
             mCheckBoxUseCurrentLocationPreference.setChecked(value);
 
         } else if (key.equals(getString(R.string.pref_current_city_key))) {
-
+            // if the name of the current city was updated
             mCheckBoxUseCurrentLocationPreference.setSummary(
                     sharedPreferences.getString(getResources().getString(R.string.pref_current_city_key), ""));
-
         }
 
-        Preference preference = findPreference(key);
-        if (null != preference) {
-            if (!(preference instanceof CheckBoxPreference)) {
-                setPreferenceSummary(preference, sharedPreferences.getString(key, ""));
-            }
-        }
+    }
+
+    private void setSummaryByStringValue(SharedPreferences sharedPreferences, String key) {
+        setPreferenceSummary(findPreference(key), sharedPreferences.getString(key, ""));
     }
 
 }

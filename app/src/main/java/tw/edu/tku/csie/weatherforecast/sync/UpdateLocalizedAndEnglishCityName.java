@@ -48,8 +48,12 @@ public class UpdateLocalizedAndEnglishCityName extends IntentService {
         if (engAddresses != null && engAddresses.size() > 0) {
             Address address = engAddresses.get(0);
             String location = address.getLocality();
-            WeatherAppPreferences.setEngPreferredWeatherLocation(this, location);
-            SyncUtils.startImmediateSync(this);
+            String previous = WeatherAppPreferences.getEngPreferredWeatherLocation(this);
+            if (!previous.equals(location)) {
+                WeatherAppPreferences.setEngPreferredWeatherLocation(this, location);
+                // auto sync only when it's changed
+                SyncUtils.startImmediateSync(this);
+            }
         }
     }
 

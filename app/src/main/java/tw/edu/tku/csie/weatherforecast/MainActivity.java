@@ -82,13 +82,8 @@ public class MainActivity extends AppCompatActivity implements
      */
     private static final int ID_FORECAST_LOADER = 44;
 
-//    private SwipeRefreshLayout mSwipeRefreshLayout;
-
     private ForecastAdapter mForecastAdapter;
-//    private RecyclerView mRecyclerView;
     private int mPosition = RecyclerView.NO_POSITION;
-
-//    private ProgressBar mLoadingIndicator;
 
     private ActivityForecastBinding mBinding;
 
@@ -97,23 +92,6 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_forecast);
         getSupportActionBar().setElevation(0f);
-
-//        mSwipeRefreshLayout = findViewById(R.id.weather_forecast_swipe_refresh);
-
-        /*
-         * Using findViewById, we get a reference to our RecyclerView from xml. This allows us to
-         * do things like set the adapter of the RecyclerView and toggle the visibility.
-         */
-//        mRecyclerView = findViewById(R.id.recyclerview_forecast);
-
-        /*
-         * The ProgressBar that will indicate to the user that we are loading data. It will be
-         * hidden when no data is loading.
-         *
-         * Please note: This so called "ProgressBar" isn't a bar by default. It is more of a
-         * circle. We didn't make the rules (or the names of Views), we just follow them.
-         */
-//        mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
 
         /*
          * A LinearLayoutManager is responsible for measuring and positioning item views within a
@@ -133,14 +111,12 @@ public class MainActivity extends AppCompatActivity implements
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 
         /* setLayoutManager associates the LayoutManager we created above with our RecyclerView */
-//        mRecyclerView.setLayoutManager(layoutManager);
         mBinding.recyclerviewForecast.setLayoutManager(layoutManager);
 
         /*
          * Use this setting to improve performance if you know that changes in content do not
          * change the child layout size in the RecyclerView
          */
-//        mRecyclerView.setHasFixedSize(true);
         mBinding.recyclerviewForecast.setHasFixedSize(true);
 
         /*
@@ -156,10 +132,8 @@ public class MainActivity extends AppCompatActivity implements
         mForecastAdapter = new ForecastAdapter(this, this);
 
         /* Setting the adapter attaches it to the RecyclerView in our layout. */
-//        mRecyclerView.setAdapter(mForecastAdapter);
         mBinding.recyclerviewForecast.setAdapter(mForecastAdapter);
 
-//        mSwipeRefreshLayout.setOnRefreshListener(this::refresh);
         mBinding.weatherForecastSwipeRefresh.setOnRefreshListener(this::refresh);
 
 
@@ -285,10 +259,8 @@ public class MainActivity extends AppCompatActivity implements
         } else {
             mForecastAdapter.swapCursor(data);
             if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
-//        mRecyclerView.smoothScrollToPosition(mPosition);
             mBinding.recyclerviewForecast.smoothScrollToPosition(mPosition);
             if (data.getCount() != 0) showWeatherDataView();
-//        mSwipeRefreshLayout.setRefreshing(false);
             mBinding.weatherForecastSwipeRefresh.setRefreshing(false);
         }
     }
@@ -329,8 +301,6 @@ public class MainActivity extends AppCompatActivity implements
             startActivity(weatherDetailIntent);
         }
     }
-
-//    private void setSomething(Intent intent)
 
     private void setDetailActivityTransitionData(Intent intent, View view) {
         intent.setAction(Intent.ACTION_VIEW);

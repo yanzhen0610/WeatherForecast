@@ -26,16 +26,10 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.transition.Fade;
-import android.transition.Slide;
-import android.transition.TransitionSet;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.animation.AnimationUtils;
 
 import tw.edu.tku.csie.weatherforecast.data.WeatherAppContract;
 import tw.edu.tku.csie.weatherforecast.databinding.ActivityDetailBinding;
@@ -184,6 +178,12 @@ public class DetailActivity extends AppCompatActivity implements
         /* About menu item clicked */
         if (id == R.id.action_about) {
             startActivity(new Intent(this, AboutActivity.class));
+            return true;
+        }
+
+        /* back button clicked */
+        if (id == android.R.id.home) {
+            onBackPressed();
             return true;
         }
 

@@ -34,14 +34,6 @@ public final class OpenWeatherJsonUtils {
     /* Date time information */
     private static final String OWN_DATE_TIME = "dt";
 
-    /* Location information */
-//    private static final String OWM_CITY = "city";
-//    private static final String OWM_COORD = "coord";
-
-    /* Location coordinate */
-//    private static final String OWM_LATITUDE = "lat";
-//    private static final String OWM_LONGITUDE = "lon";
-
     /* Weather information. Each day's forecast info is an element of the "list" array */
     private static final String OWM_LIST = "list";
 
@@ -49,17 +41,12 @@ public final class OpenWeatherJsonUtils {
     private static final String OWM_HUMIDITY = "humidity";
 
     private static final String OWN_WIND_INFO = "wind";
-    private static final String OWM_WINDSPEED = "speed";
+    private static final String OWM_WIND_SPEED = "speed";
     private static final String OWM_WIND_DIRECTION = "deg";
 
     private static final String OWN_MAIN_INFO = "main";
 
-    /* All temperatures are children of the "temp" object */
-//    private static final String OWM_TEMPERATURE = "temp";
-
     /* Max temperature for the day */
-//    private static final String OWM_MAX = "max";
-//    private static final String OWM_MIN = "min";
     private static final String OWM_MAX = "temp_max";
     private static final String OWM_MIN = "temp_min";
 
@@ -105,26 +92,7 @@ public final class OpenWeatherJsonUtils {
 
         JSONArray jsonWeatherArray = forecastJson.getJSONArray(OWM_LIST);
 
-//        JSONObject cityJson = forecastJson.getJSONObject(OWM_CITY);
-//
-//        JSONObject cityCoord = cityJson.getJSONObject(OWM_COORD);
-//        double cityLatitude = cityCoord.getDouble(OWM_LATITUDE);
-//        double cityLongitude = cityCoord.getDouble(OWM_LONGITUDE);
-//
-//        WeatherAppPreferences.setLocationDetails(context, cityLatitude, cityLongitude);
-
         ContentValues[] weatherContentValues = new ContentValues[jsonWeatherArray.length()];
-
-        /*
-         * OWM returns daily forecasts based upon the local time of the city that is being asked
-         * for, which means that we need to know the GMT offset to translate this data properly.
-         * Since this data is also sent in-order and the first day is always the current day, we're
-         * going to take advantage of that to get a nice normalized UTC date for all of our weather.
-         */
-//        long now = System.currentTimeMillis();
-//        long normalizedUtcStartDay = WeatherAppDateUtils.normalizeDate(now);
-
-//        long normalizedUtcStartDay = WeatherAppDateUtils.getNormalizedUtcDateForToday();
 
         for (int i = 0; i < jsonWeatherArray.length(); i++) {
 
@@ -146,7 +114,6 @@ public final class OpenWeatherJsonUtils {
              * We ignore all the datetime values embedded in the JSON and assume that
              * the values are returned in-order by day (which is not guaranteed to be correct).
              */
-//            dateTimeMillis = normalizedUtcStartDay + WeatherAppDateUtils.DAY_IN_MILLIS * i;
             dateTimeMillis = dayForecast.getInt(OWN_DATE_TIME) * WeatherAppDateUtils.SEC_IN_MILLIS;
 
             JSONObject mainInfo = dayForecast.getJSONObject(OWN_MAIN_INFO);
@@ -155,7 +122,7 @@ public final class OpenWeatherJsonUtils {
             pressure = mainInfo.getDouble(OWM_PRESSURE);
             humidity = mainInfo.getInt(OWM_HUMIDITY);
 
-            windSpeed = windInfo.getDouble(OWM_WINDSPEED);
+            windSpeed = windInfo.getDouble(OWM_WIND_SPEED);
             windDirection = windInfo.getDouble(OWM_WIND_DIRECTION);
 
             /*
@@ -175,7 +142,6 @@ public final class OpenWeatherJsonUtils {
              * temperature, temporary variable, temporary folder, temporary employee, or many
              * others, and is just a bad variable name.
              */
-//            JSONObject temperatureObject = dayForecast.getJSONObject(OWM_TEMPERATURE);
             high = mainInfo.getDouble(OWM_MAX);
             low = mainInfo.getDouble(OWM_MIN);
 

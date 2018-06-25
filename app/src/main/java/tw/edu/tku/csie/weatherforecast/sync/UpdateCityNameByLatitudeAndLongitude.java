@@ -37,8 +37,13 @@ public class UpdateCityNameByLatitudeAndLongitude extends IntentService {
             if (addresses != null && addresses.size() > 0) {
                 Address address = addresses.get(0);
                 String city = address.getLocality();
-                WeatherAppPreferences.resetCurrentCity(this);
-                WeatherAppPreferences.setCurrentCity(this, city);
+                String previous = WeatherAppPreferences.getCurrentCity(this);
+                if (previous == null || !previous.equals(city)) {
+                    WeatherAppPreferences.resetCurrentCity(this);
+                    WeatherAppPreferences.setCurrentCity(this, city);
+                    // auto sync only when it's changed
+                    SyncUtils.startImmediateSync(this);
+                }
                 Log.d("Address", city);
             } else {
                 Log.d("Address", "null or 0");
